@@ -5,13 +5,13 @@ import { APIS } from '../../../apis';
 
 
 export interface ManagerState {
-  [key: string]: string;
   first_name: string;
   last_name: string;
   email: string;
   password: string;
   confirm_password: string;
-  role: string;
+  user_type: number;
+  roles: number[];
   designation: string;
   dateOfJoining: string;
 }
@@ -22,7 +22,8 @@ const initialState: ManagerState = {
   email: '',
   password: '',
   confirm_password: '',
-  role: 'Manager',
+  user_type: 2,
+  roles: [],
   designation: '',
   dateOfJoining: '',
 };

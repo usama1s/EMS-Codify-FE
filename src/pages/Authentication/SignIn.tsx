@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
 import { userLogin, logIn } from '../../redux/store/slices/loginSlice';
@@ -7,24 +7,33 @@ import { useState } from 'react';
 
 const SignIn = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const initialFormData = useSelector(userLogin);
 
   // Use local state to manage the form data
   const [formData, setFormData] = useState(initialFormData);
-
-  console.log(formData)
-  const handleChange = (field: string, value: string) => {
-    // Update the corresponding field in the local state
+  const handleChange = (field: string, value: string | number) => {
     setFormData((prevFormData: any) => ({ ...prevFormData, [field]: value }));
   };
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
-    dispatch(logIn({
-      email: formData.email || '',
-      password: formData.password || ''
-    }));
+    try {
+      const response = await dispatch(logIn({
+        email: formData.email || '',
+        password: formData.password || '',
+        user_type: formData.user_type
+      }));
+
+      if (response && response.payload) {
+        // Navigate to the desired path
+        navigate('/dashboard'); // Replace '/dashboard' with your desired path
+      }
+    } catch (error) {
+      // Handle error
+      console.error('Login failed', error);
+    }
   };
 
 
@@ -246,6 +255,21 @@ const SignIn = () => {
                     </span>
                   </div>
                 </div>
+
+                <div className="mb-4.5">
+                  <label className="mb-2.5 block text-black dark:text-white">Role</label>
+                  <select
+                    value={formData.user_type}
+                    onChange={(e) => handleChange('user_type', parseInt(e.target.value))}
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  >
+                    <option value={0}>Select</option>
+                    <option value={1}>Superadmin</option>
+                    <option value={2}>Manager</option>
+                    <option value={3}>Normal Employee</option>x
+                  </select>
+                </div>
+
 
                 <div className="mb-5">
                   <button

@@ -7,14 +7,16 @@ import { APIS } from '../../../apis';
 export interface loginFormState {
   email: string;
   password: string;
+  user_type: number;
 }
 
 const initialState: loginFormState = {
   email: '',
-  password: ''
+  password: '',
+  user_type: 0
 };
 
-const logIn:any = createAsyncThunk('login/logIn', async (data) => {
+const logIn: any = createAsyncThunk('login/logIn', async (data) => {
   try {
     const response = await axios.post(APIS.login, data);
     return response.data;
