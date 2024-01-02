@@ -3,10 +3,26 @@ import Breadcrumb from '../components/Breadcrumb';
 import { registerManager, selectManager } from '../redux/store/slices/managerSlice';
 import { useState } from 'react';
 
-
+const roles = ['Manager1', 'Manager2', 'Manager3'];
+const roleValues: Record<string, number> = {
+    Manager1: 1,
+    Manager2: 2,
+    Manager3: 3,
+};
 const RegisterManager = () => {
     const dispatch = useDispatch();
     const initialFormData = useSelector(selectManager);
+
+
+    const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
+
+    const handleRoleChange = (role: string) => {
+        setSelectedRoles((prevRoles) =>
+            prevRoles.includes(roleValues[role])
+                ? prevRoles.filter((r) => r !== roleValues[role])
+                : [...prevRoles, roleValues[role]]
+        );
+    };
 
     // Use local state to manage the form data
     const [formData, setFormData] = useState(initialFormData);
@@ -25,23 +41,15 @@ const RegisterManager = () => {
             return;
         }
 
+        formData.roles = selectedRoles;
         console.log(formData);
 
-        dispatch(registerManager({ 
-            // Ensure all fields have values
-            first_name: formData.first_name || '',
-            last_name: formData.last_name || '',
-            email: formData.email || '',
-            password: formData.password || '',
-            role: formData.role || '',
-            designation: formData.designation || '',
-            date_of_joining: formData.date_of_joining || '',
-        }));
+        dispatch(registerManager(formData));
     };
 
     return (
         <>
-            <Breadcrumb pageName="Register Manager" />
+            <Breadcrumb pageName="Register" />
             <div className="flex flex-col gap-9">
                 <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                     <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
@@ -112,17 +120,24 @@ const RegisterManager = () => {
                                     onChange={(e) => handleChange('confirm_password', e.target.value)}
                                 />
                             </div>
-                            <div className="mb-4.5">
-                                <label className="mb-2.5 block text-black dark:text-white">
-                                    Role
-                                </label>
-                                <input
-                                    type="text"
-                                    value={'Manager'}
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                    readOnly
-                                />
+                            <div className="mb-4.5 flex-wrap">
+                                <label className="mb-2.5 block text-black dark:text-white">Role</label>
+                                {roles.map((role) => (
+                                    <div key={role} className="flex items-center mb-2 mr-4">
+                                        <input
+                                            type="checkbox"
+                                            id={role}
+                                            checked={selectedRoles.includes(roleValues[role] as number)}
+                                            onChange={() => handleRoleChange(role)}
+                                            className="mr-2"
+                                        />
+                                        <label htmlFor={role} className="text-black dark:text-white">
+                                            {role}
+                                        </label>
+                                    </div>
+                                ))}
                             </div>
+
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Designation
