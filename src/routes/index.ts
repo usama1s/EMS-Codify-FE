@@ -9,6 +9,8 @@ const Settings = lazy(() => import('../pages/Settings'));
 const Tables = lazy(() => import('../pages/Tables'));
 const Dashboard = lazy(() => import('../pages/Dashboard/ECommerce'));
 const RegisterUser = lazy(() => import('../pages/RegisterUser'));
+const MarkAttendence = lazy(() => import('../pages/MarkAttendence'));
+
 
 const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
 const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
@@ -33,6 +35,11 @@ const coreRoutes = [
     path: '/register-user',
     title: 'Register',
     component: RegisterUser,
+  },
+  {
+    path: '/mark-attendance',
+    title: 'Attendance',
+    component: MarkAttendence,
   },
   {
     path: '/forms/form-elements',
