@@ -141,3 +141,13 @@ export const NAVIGATION_LINKS = [
     ),
   },
 ];
+
+
+export const INPUT_FIELDS_PERSONAL_INFO = [
+  { label: 'First Name', type: 'text', name: 'first_name', placeholder: 'Devid' },
+  { label: 'Last Name', type: 'text', name: 'last_name', placeholder: 'John' },
+  { label: 'Email Address', type: 'email', name: 'email', placeholder: 'devidjond45@gmail.com' },
+  { label: 'Role', type: 'text', name: 'role', placeholder: 'devidjhon24' },
+  { label: 'Designation', type: 'text', name: 'designation', placeholder: 'Senior Software Engineer' },
+  { label: 'Date of Joining', type: 'text', name: 'date_of_joining', placeholder: 'YYYY-MM-DD' },
+];

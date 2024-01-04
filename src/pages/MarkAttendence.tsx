@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback } from 'react';
 import Webcam from 'react-webcam';
 import Breadcrumb from '../components/Breadcrumb';
 
@@ -22,7 +22,7 @@ declare global {
 
 const MarkAttendence: React.FC = () => {
     const webcamRef = useRef<Webcam>(null);
-    const [locationName, setLocationName] = useState<string | null>(null);
+    // const [locationName, setLocationName] = useState<string | null>(null);
 
     const capture = useCallback(async () => {
         if (webcamRef.current) {
