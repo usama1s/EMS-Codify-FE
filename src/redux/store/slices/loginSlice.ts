@@ -16,28 +16,28 @@ const initialState: loginFormState = {
   user_type: 0
 };
 
-const logIn: any = createAsyncThunk('login/logIn', async (data) => {
-  try {
-    const response = await axios.post(APIS.login, data);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-});
-
-// const logIn = createAsyncThunk('login/logIn', async (data, { dispatch }) => {
+// const logIn: any = createAsyncThunk('login/logIn', async (data) => {
 //   try {
 //     const response = await axios.post(APIS.login, data);
-//     const userData = response.data;
-
-//     // Store the user data in local storage
-//     localStorage.setItem('userData', JSON.stringify(userData));
-
-//     return userData;
+//     return response.data;
 //   } catch (error) {
 //     throw error;
 //   }
 // });
+
+const logIn:any = createAsyncThunk('login/logIn', async (data) => {
+  try {
+    const response = await axios.post(APIS.login, data);
+    const userData = response.data;
+
+    // Store the user data in local storage
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+    return userData;
+  } catch (error) {
+    throw error;
+  }
+});
 
 const loginSlice = createSlice({
   name: 'login',

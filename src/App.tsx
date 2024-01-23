@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 // import { useSelector } from 'react-redux'; // Import useSelector
 import SignIn from './pages/Authentication/SignIn';
@@ -11,6 +11,7 @@ const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
+  const isAuthenticated = localStorage.getItem('user') !== null;
   // const isAuthenticated = useSelector((state: any) => state.user.state.isAuthenticated);
 
   useEffect(() => {
@@ -27,7 +28,16 @@ function App() {
         containerClassName="overflow-auto"
       />
       <Routes>
-        <Route path="/" element={<SignIn />} />
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/dashboard" replace />    
+            ) : (
+              <SignIn />
+            )
+          }
+        />
         <Route
           path="/protected"
           element={<ProtectedRoute children={undefined}>{/* Your protected content goes here */}</ProtectedRoute>}

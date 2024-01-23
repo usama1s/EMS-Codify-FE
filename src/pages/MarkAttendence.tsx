@@ -1,6 +1,9 @@
 import React, { useRef, useCallback } from 'react';
 import Webcam from 'react-webcam';
 import Breadcrumb from '../components/Breadcrumb';
+import { attendance } from '../redux/store/slices/attendanceSlice';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 declare global {
     interface Coordinates {
@@ -22,48 +25,74 @@ declare global {
 
 const MarkAttendence: React.FC = () => {
     const webcamRef = useRef<Webcam>(null);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     // const [locationName, setLocationName] = useState<string | null>(null);
 
     const capture = useCallback(async () => {
         if (webcamRef.current) {
-            const imageSrc = webcamRef.current.getScreenshot();
+            const attendance_picture = webcamRef.current.getScreenshot();
             try {
                 const location = await getCurrentLocation();
-                const locationName = await getLocationName(location.latitude, location.longitude);
+                // const locationName = await getLocationName(location.latitude, location.longitude);
 
                 console.log('Live Location:', location);
-                console.log('Location Name:', locationName);
+                // console.log('Location Name:', locationName);
+                const attendanceData = {
+                    attendance_picture: attendance_picture,
+                    location: location,
+                };
+
+                const response = await dispatch(attendance(attendanceData));
+
+                if (response && response.payload) {
+                    alert(response.payload.message)
+                    navigate('/dashboard');
+                }
 
                 // Do something with the captured image, location, and location name.
             } catch (error) {
                 console.error('Error getting live location:', error);
             }
-            console.log(imageSrc);
         }
     }, [webcamRef]);
 
-    const getCurrentLocation = (): Promise<Coordinates> => new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => resolve(position.coords),
-            reject,
-            { enableHighAccuracy: true }
-        );
-    });
-    const getLocationName = async (latitude: number, longitude: number): Promise<string> => {
-        const apiUrl = `https://api.example.com/reverse-geocode?lat=${latitude}&lon=${longitude}`;
-
-        try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-
-            // Extract the location name from the response.
-            const locationName = data.results[0]?.formatted_address || 'Unknown Location';
-            return locationName;
-        } catch (error) {
-            console.error('Error fetching location name:', error);
-            return 'Unknown Location';
-        }
+    const getCurrentLocation = () => {
+        return new Promise((resolve, reject) => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        resolve({
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        });
+                    },
+                    error => {
+                        reject(error);
+                    }
+                );
+            } else {
+                reject(new Error("Geolocation is not supported by this browser."));
+            }
+        });
     };
+
+    // const getLocationName = async (latitude: number, longitude: number): Promise<string> => {
+    //     const apiUrl = `https://api.example.com/reverse-geocode?lat=${latitude}&lon=${longitude}`;
+
+    //     try {
+    //         const response = await fetch(apiUrl);
+    //         const data = await response.json();
+
+    //         // Extract the location name from the response.
+    //         const locationName = data.results[0]?.formatted_address || 'Unknown Location';
+    //         return locationName;
+    //     } catch (error) {
+    //         console.error('Error fetching location name:', error);
+    //         return 'Unknown Location';
+    //     }
+    // };
 
     return (
         <>
@@ -89,3 +118,4 @@ const MarkAttendence: React.FC = () => {
 };
 
 export default MarkAttendence;
+
