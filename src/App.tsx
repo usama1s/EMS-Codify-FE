@@ -5,14 +5,12 @@ import { Toaster } from 'react-hot-toast';
 import SignIn from './pages/Authentication/SignIn';
 import Loader from './common/Loader';
 import routes from './routes';
-import ProtectedRoute from './common/protectedRouting';
-
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
-  const isAuthenticated = localStorage.getItem('user') !== null;
-  // const isAuthenticated = useSelector((state: any) => state.user.state.isAuthenticated);
+  const userData = localStorage.getItem('userData');
+  const isAuthenticated = userData !== null;
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
@@ -32,15 +30,11 @@ function App() {
           path="/"
           element={
             isAuthenticated ? (
-              <Navigate to="/dashboard" replace />    
+              <Navigate to="/dashboard" replace />
             ) : (
               <SignIn />
             )
           }
-        />
-        <Route
-          path="/protected"
-          element={<ProtectedRoute children={undefined}>{/* Your protected content goes here */}</ProtectedRoute>}
         />
         <Route element={<DefaultLayout />}>
           {routes.map((route, index) => {
