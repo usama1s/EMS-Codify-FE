@@ -12,7 +12,7 @@ const DropdownUser = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('userData');
-    navigate('/');
+    navigate('/sign-in');
   };
 
   // close on click outside

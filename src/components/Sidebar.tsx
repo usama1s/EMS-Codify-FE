@@ -2,13 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import Logo from '../images/logo/logo.svg';
 import { NAVIGATION_LINKS } from "../constants/constants";
+import { RootState } from '../redux/store';
+import { useSelector } from 'react-redux';
+import { UserState } from '../redux/store/slices/userSlice';
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
-  
+  const userData: UserState = useSelector((state: RootState) => state.user);
+  console.log(userData);
   const location = useLocation();
   const { pathname } = location;
 
@@ -55,6 +59,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     }
   }, [sidebarExpanded]);
 
+  const filteredLinks = NAVIGATION_LINKS.filter(link => {
+    // Adjust the condition based on your user types and link requirements
+    return (
+      (userData.user_type === 1 && link.allowedForUserType1) ||
+      (userData.user_type === 2 && link.allowedForUserType2) ||
+      (userData.user_type === 3 && link.allowedForUserType3)
+    );
+    // Add more conditions for other user types if needed
+  });
   return (
     <aside
       ref={sidebar}
@@ -98,7 +111,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               MENU
             </h3>
             <ul className="mb-6 flex flex-col gap-1.5">
-              {NAVIGATION_LINKS.map((link, index) => (
+              {filteredLinks.map((link, index) => (
                 <li key={index}>
                   <NavLink
                     to={link.path}

@@ -4,6 +4,8 @@ import Logo from '../../images/logo/logo.svg';
 import { userLogin, logIn } from '../../redux/store/slices/loginSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
+import { setUserData } from '../../redux/store/slices/userSlice';
+
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -20,18 +22,18 @@ const SignIn = () => {
     e.preventDefault();
 
     try {
-      const response = await dispatch(logIn({
+      const loginData = {
         email: formData.email || '',
         password: formData.password || '',
-        user_type: formData.user_type
-      }));
+        user_type: formData.user_type || '',
+      };
+      const response = await dispatch(logIn(loginData));
 
       if (response && response.payload) {
-        // Navigate to the desired path
-        navigate('/dashboard'); // Replace '/dashboard' with your desired path
+        dispatch(setUserData(response.payload));
+        navigate('/');
       }
     } catch (error) {
-      // Handle error
       console.error('Login failed', error);
     }
   };
@@ -263,8 +265,8 @@ const SignIn = () => {
                     onChange={(e) => handleChange('user_type', parseInt(e.target.value))}
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   >
-                    <option value={0}>Select</option>
-                    <option value={1}>Superadmin</option>
+                    <option >Select</option>
+                    <option value={1}>Super Admin</option>
                     <option value={2}>Manager</option>
                     <option value={3}>Normal Employee</option>x
                   </select>

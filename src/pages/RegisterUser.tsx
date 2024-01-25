@@ -3,13 +3,16 @@ import Breadcrumb from '../components/Breadcrumb';
 import { registerManager, selectManager } from '../redux/store/slices/managerSlice';
 import { useState } from 'react';
 
-const roles = ['Manager1', 'Manager2', 'Manager3'];
+const roles = ['Employee/Intern Attendence', 'Leave Approvel', 'Daily Progress', 'Pay Schedule', 'Employee data', 'Office Decorum'];
 const roleValues: Record<string, number> = {
-    Manager1: 1,
-    Manager2: 2,
-    Manager3: 3,
+    Attendence: 1,
+    Leave: 2,
+    Progress: 3,
+    Pay: 4,
+    Data: 5,
+    Decorum: 6
 };
-const RegisterManager = () => {
+const RegisterUser = () => {
     const dispatch = useDispatch();
     const initialFormData = useSelector(selectManager);
 
@@ -121,7 +124,7 @@ const RegisterManager = () => {
                                 />
                             </div>
                             <div className="mb-4.5 flex-wrap">
-                                <label className="mb-2.5 block text-black dark:text-white">Role</label>
+                                <label className="mb-2.5 block text-black dark:text-white">Assign roles</label>
                                 {roles.map((role) => (
                                     <div key={role} className="flex items-center mb-2 mr-4">
                                         <input
@@ -169,4 +172,4 @@ const RegisterManager = () => {
     );
 };
 
-export default RegisterManager;
+export default RegisterUser;

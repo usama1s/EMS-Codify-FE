@@ -1,17 +1,20 @@
-import { Suspense, lazy, useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { lazy, useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 // import { useSelector } from 'react-redux'; // Import useSelector
 import SignIn from './pages/Authentication/SignIn';
 import Loader from './common/Loader';
-import routes from './routes';
+// import routes from './routes';
+import ECommerce from './pages/Dashboard/ECommerce';
+import RegisterUser from './pages/RegisterUser';
+import MarkAttendence from './pages/MarkAttendence';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import ProtectedRoute from './routes/protectedRoute';
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
-  const userData = localStorage.getItem('userData');
-  const isAuthenticated = userData !== null;
-
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
@@ -27,6 +30,34 @@ function App() {
       />
       <Routes>
         <Route
+          path='/sign-in'
+          element={<SignIn />}
+        />
+        <Route element={<DefaultLayout />}>
+          <Route
+            path='/'
+            element={<ProtectedRoute Component={ECommerce} />}
+          />
+          <Route
+            path='/register-user'
+            element={<ProtectedRoute Component={RegisterUser} />}
+          />
+          <Route
+            path='/mark-attendence'
+            element={<ProtectedRoute Component={MarkAttendence} />}
+          />
+          <Route
+            path='/profile'
+            element={<ProtectedRoute Component={Profile} />}
+          />
+          <Route
+            path='/settings'
+            element={<ProtectedRoute Component={Settings} />}
+          />
+        </Route>
+
+
+        {/* <Route
           path="/"
           element={
             isAuthenticated ? (
@@ -51,8 +82,8 @@ function App() {
               />
             );
           })}
-        </Route>
-      </Routes>
+        </Route> */}
+      </Routes >
     </>
   );
 }

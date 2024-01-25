@@ -1,7 +1,7 @@
 // NavigationConstants.js
 export const NAVIGATION_LINKS = [
   {
-    path: "/dashboard",
+    path: "/",
     text: "Dashboard",
     icon: (
       <svg
@@ -30,6 +30,9 @@ export const NAVIGATION_LINKS = [
         />
       </svg>
     ),
+    allowedForUserType1: true,
+    allowedForUserType2: true,
+    allowedForUserType3: true,
   },
   {
     path: "/register-user",
@@ -49,7 +52,8 @@ export const NAVIGATION_LINKS = [
         />
       </svg>
     ),
-    roles: ["superadmin", "manager"],
+    allowedForUserType1: true,
+    allowedForUserType2: true,
   },
   {
     path: "/profile",
@@ -73,6 +77,9 @@ export const NAVIGATION_LINKS = [
         />
       </svg>
     ),
+    allowedForUserType1: true,
+    allowedForUserType2: true,
+    allowedForUserType3: true,
   },
   {
     path: "/settings",
@@ -108,9 +115,12 @@ export const NAVIGATION_LINKS = [
         </defs>
       </svg>
     ),
+    allowedForUserType1: true,
+    allowedForUserType2: true,
+    allowedForUserType3: true,
   },
   {
-    path: "/mark-attendance",
+    path: "/mark-attendence",
     text: "Mark Attendance",
     icon: (
       <svg
@@ -139,6 +149,8 @@ export const NAVIGATION_LINKS = [
         />
       </svg>
     ),
+    allowedForUserType2: true,
+    allowedForUserType3: true,
   },
 ];
 

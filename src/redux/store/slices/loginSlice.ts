@@ -3,7 +3,16 @@ import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { APIS } from '../../../apis';
 
-
+export interface User {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  user_type: number;
+  roles: number[];
+  designation?: string;
+  date_of_joining?: string;
+}
 export interface loginFormState {
   email: string;
   password: string;
@@ -16,21 +25,12 @@ const initialState: loginFormState = {
   user_type: 0
 };
 
-// const logIn: any = createAsyncThunk('login/logIn', async (data) => {
-//   try {
-//     const response = await axios.post(APIS.login, data);
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// });
 
-const logIn:any = createAsyncThunk('login/logIn', async (data) => {
+export const logIn: any = createAsyncThunk('login/logIn', async (data) => {
   try {
     const response = await axios.post(APIS.login, data);
     const userData = response.data;
 
-    // Store the user data in local storage
     localStorage.setItem('userData', JSON.stringify(userData));
 
     return userData;
@@ -44,15 +44,16 @@ const loginSlice = createSlice({
   initialState,
   reducers: {
     loginUser: (state, action: PayloadAction<loginFormState>) => {
-      // Ensure to handle the action payload correctly
       return { ...state, ...action.payload };
     },
-    // ... (other reducers),
   },
 });
 
 const loginReducer = loginSlice.reducer;
+export const { loginUser } = loginSlice.actions;
 
 export const userLogin = (state: { login: any; }) => state.login;
-export { logIn };
+
 export default loginReducer;
+
+
