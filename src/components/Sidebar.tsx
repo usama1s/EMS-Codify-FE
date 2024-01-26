@@ -2,16 +2,25 @@ import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import Logo from '../images/logo/logo.svg';
 import { NAVIGATION_LINKS } from "../constants/constants";
-import { RootState } from '../redux/store';
-import { useSelector } from 'react-redux';
-import { UserState } from '../redux/store/slices/userSlice';
+import { UserData } from '../common/interfaces';
+// import { RootState } from '../redux/store';
+// import { useSelector } from 'react-redux';
+// import { UserState } from '../redux/store/slices/userSlice';
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
 }
 
+
+
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
-  const userData: UserState = useSelector((state: RootState) => state.user);
+  // const userData: UserState = useSelector((state: RootState) => state.user);
+
+  const userDataString = localStorage.getItem('userData');
+  const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
+  const userType: number | null = userData ? userData.user_type : null;
+
+
   console.log(userData);
   const location = useLocation();
   const { pathname } = location;
@@ -59,15 +68,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     }
   }, [sidebarExpanded]);
 
-  const filteredLinks = NAVIGATION_LINKS.filter(link => {
-    // Adjust the condition based on your user types and link requirements
-    return (
-      (userData.user_type === 1 && link.allowedForUserType1) ||
-      (userData.user_type === 2 && link.allowedForUserType2) ||
-      (userData.user_type === 3 && link.allowedForUserType3)
-    );
-    // Add more conditions for other user types if needed
-  });
   return (
     <aside
       ref={sidebar}
@@ -111,17 +111,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               MENU
             </h3>
             <ul className="mb-6 flex flex-col gap-1.5">
-              {filteredLinks.map((link, index) => (
-                <li key={index}>
-                  <NavLink
-                    to={link.path}
-                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes(link.path) && 'bg-graydark dark:bg-meta-4'
-                      }`}
-                  >
-                    {link.icon}
-                    {link.text}
-                  </NavLink>
-                </li>
+              {NAVIGATION_LINKS.map((link, index) => (
+                
+                // Check if the link is applicable to the user type
+                (link.userTypes && userType && link.userTypes.includes(userType)) && (
+                  <li key={index}>
+                    <NavLink
+                      to={link.path}
+                      className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes(link.path) && 'bg-graydark dark:bg-meta-4'
+                        }`}
+                    >
+                      {link.text}
+                    </NavLink>
+                  </li>
+                )
               ))}
             </ul>
           </div>

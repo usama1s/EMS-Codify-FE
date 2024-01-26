@@ -7,7 +7,7 @@ const FormLayout = lazy(() => import('../pages/Form/FormLayout'));
 const Profile = lazy(() => import('../pages/Profile'));
 const Settings = lazy(() => import('../pages/Settings'));
 const Tables = lazy(() => import('../pages/Tables'));
-const Dashboard = lazy(() => import('../pages/Dashboard/ECommerce'));
+const Dashboard = lazy(() => import('../pages/Dashboard'));
 const RegisterUser = lazy(() => import('../pages/RegisterUser'));
 const MarkAttendence = lazy(() => import('../pages/MarkAttendence'));
 

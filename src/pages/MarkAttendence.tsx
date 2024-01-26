@@ -4,23 +4,9 @@ import Breadcrumb from '../components/Breadcrumb';
 import { attendance } from '../redux/store/slices/attendanceSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { UserData } from '../common/interfaces';
 
-declare global {
-    interface Coordinates {
-        latitude: number;
-        longitude: number;
-        altitude?: number | null;
-        accuracy: number;
-        altitudeAccuracy?: number | null;
-        heading?: number | null;
-        speed?: number | null;
-    }
 
-    interface Position {
-        coords: Coordinates;
-        timestamp: number;
-    }
-}
 
 
 const MarkAttendence: React.FC = () => {
@@ -28,27 +14,29 @@ const MarkAttendence: React.FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    // const [locationName, setLocationName] = useState<string | null>(null);
+    const userDataString = localStorage.getItem('userData');
+    const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
+    const userId: number | null = userData ? userData.user_id : null;
 
     const capture = useCallback(async () => {
         if (webcamRef.current) {
             const attendance_picture = webcamRef.current.getScreenshot();
             try {
                 const location = await getCurrentLocation();
-                // const locationName = await getLocationName(location.latitude, location.longitude);
 
                 console.log('Live Location:', location);
-                // console.log('Location Name:', locationName);
+
                 const attendanceData = {
                     attendance_picture: attendance_picture,
                     location: location,
+                    user_id: userId
                 };
 
                 const response = await dispatch(attendance(attendanceData));
 
                 if (response && response.payload) {
                     alert(response.payload.message)
-                    navigate('/dashboard');
+                    navigate('/');
                 }
 
                 // Do something with the captured image, location, and location name.

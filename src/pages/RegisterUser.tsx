@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Breadcrumb from '../components/Breadcrumb';
 import { registerManager, selectManager } from '../redux/store/slices/managerSlice';
 import { useState } from 'react';
+import { UserData } from '../common/interfaces';
 
 const roles = ['Employee/Intern Attendence', 'Leave Approvel', 'Daily Progress', 'Pay Schedule', 'Employee data', 'Office Decorum'];
 const roleValues: Record<string, number> = {
@@ -12,10 +13,16 @@ const roleValues: Record<string, number> = {
     Data: 5,
     Decorum: 6
 };
+
+
+
 const RegisterUser = () => {
     const dispatch = useDispatch();
     const initialFormData = useSelector(selectManager);
 
+    const userDataString = localStorage.getItem('userData');
+    const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
+    const userType: string | null = userData ? userData.user_type : null;
 
     const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
 
@@ -52,7 +59,7 @@ const RegisterUser = () => {
 
     return (
         <>
-            <Breadcrumb pageName="Register" />
+            <Breadcrumb pageName={userType === '2' ? "Register Employee" : "Register Manager"} />
             <div className="flex flex-col gap-9">
                 <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                     <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
@@ -123,23 +130,27 @@ const RegisterUser = () => {
                                     onChange={(e) => handleChange('confirm_password', e.target.value)}
                                 />
                             </div>
-                            <div className="mb-4.5 flex-wrap">
-                                <label className="mb-2.5 block text-black dark:text-white">Assign roles</label>
-                                {roles.map((role) => (
-                                    <div key={role} className="flex items-center mb-2 mr-4">
-                                        <input
-                                            type="checkbox"
-                                            id={role}
-                                            checked={selectedRoles.includes(roleValues[role] as number)}
-                                            onChange={() => handleRoleChange(role)}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor={role} className="text-black dark:text-white">
-                                            {role}
-                                        </label>
-                                    </div>
-                                ))}
-                            </div>
+                            {userType !== '2' && (
+                                <div className="mb-4.5 flex-wrap">
+                                    <label className="mb-2.5 block text-black dark:text-white">Assign roles</label>
+                                    {roles.map((role) => (
+                                        <div key={role} className="flex items-center mb-2 mr-4">
+                                            <input
+                                                type="checkbox"
+                                                id={role}
+                                                checked={selectedRoles.includes(roleValues[role] as number)}
+                                                onChange={() => handleRoleChange(role)}
+                                                className="mr-2"
+                                            />
+                                            <label htmlFor={role} className="text-black dark:text-white">
+                                                {role}
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+
 
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">

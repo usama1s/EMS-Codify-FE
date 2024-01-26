@@ -4,7 +4,7 @@ export const APIS = {
     registerManager: `${BaseURL}auth/register-user`,
     login: `${BaseURL}auth/sign-in`,
     markAttendance: `${BaseURL}attendence/insert-attendence`,
-
+    getAllManagersAttendence: `${BaseURL}admin/get-all-managers-attendance`,
 };
 
 // interface LoginUserRequestBody {
