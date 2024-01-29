@@ -32,3 +32,69 @@ export interface Position {
     coords: Coordinates;
     timestamp: number;
 }
+
+export interface userData {
+    user_id: number;
+}
+
+export interface ClockOutData {
+    attendance_picture: string;
+    location: string;
+    user_id: string;
+}
+
+export interface ModalProps {
+    closeModal: () => void;
+    onSubmit: (clockOutData: ClockOutData, hours: number) => void;
+    clockOutData: ClockOutData;
+    hours: number | undefined;
+}
+
+
+
+
+
+
+
+
+
+
+   // const getLocationName = async (latitude: number, longitude: number): Promise<string> => {
+    //     const apiUrl = `https://api.example.com/reverse-geocode?lat=${latitude}&lon=${longitude}`;
+
+    //     try {
+    //         const response = await fetch(apiUrl);
+    //         const data = await response.json();
+
+    //         // Extract the location name from the response.
+    //         const locationName = data.results[0]?.formatted_address || 'Unknown Location';
+    //         return locationName;
+    //     } catch (error) {
+    //         console.error('Error fetching location name:', error);
+    //         return 'Unknown Location';
+    //     }
+    // };
+
+
+     // if (hours !== undefined && hours <= 6) {
+
+
+                //     const clockOutData = {
+                //         attendance_picture: attendance_picture,
+                //         location: location,
+                //         user_id: userId,
+                //     };
+
+                //     try {
+                //         const response = await axios.post(APIS.clockOut, clockOutData);
+
+                //         if (response && response.data) {
+                //             alert(response.data.message);
+                //             navigate('/');
+                //         }
+                //     } catch (error) {
+                //         console.error('Error during clock out:', error);
+                //     }
+                // }
+
+                // Do something with the captured image, location, and location name.
