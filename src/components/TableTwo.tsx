@@ -38,14 +38,20 @@ const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Name</p>
         </div>
-        <div className="col-span-2 hidden items-center sm:flex">
+        <div className="col-span-1 hidden items-center sm:flex">
           <p className="font-medium">Designation</p>
         </div>
-        <div className="col-span-2 flex items-center">
+        <div className="col-span-1 flex items-center">
           <p className="font-medium">Email</p>
         </div>
         <div className="col-span-2 flex items-center">
-          <p className="font-medium">Attendance Date</p>
+          <p className="font-medium">Date</p>
+        </div>
+        <div className="col-span-1 flex items-center">
+          <p className="font-medium">Clock In</p>
+        </div>
+        <div className="col-span-1 flex items-center">
+          <p className="font-medium">Clock Out</p>
         </div>
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Attendance Picture</p>
@@ -66,9 +72,12 @@ const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
           <div className="col-span-2 flex items-center">
             <p className="text-sm text-black dark:text-white">{attendance.attendance_date_time}</p>
           </div>
-          <div className="col-span-1 flex items-center">
-            <img src={decodeBase64Image(attendance.attendance_picture)} alt="Attendance" className="w-12 h-12 object-cover rounded-full" />
+          <div className="col-span-2 flex items-center">
+            <p className="text-sm text-black dark:text-white">{attendance.attendance_date_time}</p>
           </div>
+          {/* <div className="col-span-1 flex items-center">
+            <img src={decodeBase64Image(attendance.attendance_picture)} alt="Attendance" className="w-12 h-12 object-cover rounded-full" />
+          </div> */}
         </div>
       ))}
     </div>

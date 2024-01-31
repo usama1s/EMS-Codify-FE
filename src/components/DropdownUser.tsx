@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import UserOne from '../images/user/user-01.png';
+import { UserData } from '../common/interfaces';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -14,6 +15,9 @@ const DropdownUser = () => {
     localStorage.removeItem('userData');
     navigate('/sign-in');
   };
+
+  const userDataString = localStorage.getItem('userData');
+  const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
 
   // close on click outside
   useEffect(() => {
@@ -51,9 +55,9 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+            {userData?.first_name} {userData?.last_name}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs">{userData?.designation}</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">

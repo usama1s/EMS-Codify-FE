@@ -8,13 +8,13 @@ import { UserData } from '../common/interfaces';
 import axios from 'axios';
 import { APIS } from '../apis';
 import Modal from '../components/Modal';
-
-
+import { resetTimer, startTimer } from '../redux/store/slices/timerSlice';
 
 
 
 const MarkAttendence: React.FC = () => {
     const webcamRef = useRef<Webcam>(null);
+    // let clock_type: string;
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
@@ -23,11 +23,13 @@ const MarkAttendence: React.FC = () => {
         attendance_picture: string;
         location: string;
         user_id: string;
+        clock_type: string;
     } | undefined>(undefined);
 
     const userDataString = localStorage.getItem('userData');
     const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
     const userId: number | null = userData ? userData.user_id : null;
+
 
 
     const captureClockOut = useCallback(async () => {
@@ -43,17 +45,32 @@ const MarkAttendence: React.FC = () => {
                         attendance_picture: attendance_picture,
                         location: location,
                         user_id: userId,
+                        clock_type: 'CO'
                     };
 
                     if (hours !== undefined && clockOutData !== undefined) {
+                        const { attendance_picture, location, user_id, clock_type } = clockOutData;
+                        const sanitizedClockOutData = {
+                            attendance_picture: attendance_picture || '',
+                            location: location as string,
+                            user_id: user_id as unknown as string,
+                            clock_type: clock_type as unknown as string,
+                        };
 
-                        setHours(hours)
-                        // setClockOutData(clockOutData)
-                        setShowModal(() => true);
+                        setHours(hours);
+                        setClockOutData(sanitizedClockOutData);
+                        setShowModal(true);
 
                     }
-
-
+                }
+                else {
+                    try {
+                        const response = await axios.post(APIS.clockOut, clockOutData);
+                        handleResetTimer()
+                        console.log("API response:", response);
+                    } catch (error) {
+                        console.error("Error while calling clockOut API:", error);
+                    }
                 }
 
             } catch (error) {
@@ -65,9 +82,9 @@ const MarkAttendence: React.FC = () => {
 
     const checkHours = async () => {
         const user_id = userId;
-
+        const clock_type: string = "CI"
         try {
-            const response = await axios.get(APIS.getClockInTime, { params: { user_id } });
+            const response = await axios.get(APIS.getClockInTime, { params: { user_id, clock_type } });
 
             // Assuming the response data has a property named 'recent_attendance_time'
             const serverClockInTime = new Date(response.data.recent_attendance_time);
@@ -81,7 +98,7 @@ const MarkAttendence: React.FC = () => {
             // If the user's time zone is not in EST, convert the server time to EST
             if (userTimeZone !== 'America/New_York') {
                 const estClockInTime = new Date(serverClockInTime.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-                console.log('Clock in time in EST:', estClockInTime);
+                // console.log('Clock in time in EST:', estClockInTime);
                 // Calculate the time difference in hours
                 const timeDifferenceHours = (localClockInTime.valueOf() - estClockInTime.valueOf()) / (1000 * 60 * 60);
                 return timeDifferenceHours;
@@ -111,13 +128,15 @@ const MarkAttendence: React.FC = () => {
                 const attendanceData = {
                     attendance_picture: attendance_picture,
                     location: location,
-                    user_id: userId
+                    user_id: userId,
+                    clock_type: 'CI'
                 };
 
                 const response = await dispatch(attendance(attendanceData));
 
                 if (response && response.payload) {
                     alert(response.payload.message)
+                    handleStartTimer();
                     navigate('/');
                 }
 
@@ -127,6 +146,16 @@ const MarkAttendence: React.FC = () => {
             }
         }
     }, [webcamRef]);
+
+
+
+    const handleStartTimer = () => {
+        dispatch(startTimer());
+    };
+    const handleResetTimer = () => {
+        dispatch(resetTimer());
+    };
+
 
     const getCurrentLocation = () => {
         return new Promise((resolve, reject) => {
@@ -147,6 +176,10 @@ const MarkAttendence: React.FC = () => {
             }
         });
     };
+
+    function handleCloseModal(): void {
+        setShowModal(false)
+    }
 
     // const getLocationName = async (latitude: number, longitude: number): Promise<string> => {
     //     const apiUrl = `https://api.example.com/reverse-geocode?lat=${latitude}&lon=${longitude}`;
@@ -189,11 +222,10 @@ const MarkAttendence: React.FC = () => {
                         </button>
                     </div>
                     {showModal ? (
-                        <Modal isOpen={showModal} hours={hours} clockOutData={clockOutData} onClose={function (): void {
-                            throw new Error('Function not implemented.');
-                        }} />
+                        <Modal isOpen={showModal} hours={hours} clockOutData={clockOutData} onClose={handleCloseModal} />
                     ) : null}
                 </div>
+
             </div>
         </>
     );
