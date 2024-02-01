@@ -1,29 +1,21 @@
-import { AttendanceData } from "../common/interfaces";
+import { TableTwoProps } from "../common/interfaces";
 
-import React from 'react';
+import React, { useState } from 'react';
+import DashboardModal from "./DashboardModal";
 
-interface TableTwoProps {
-  data: AttendanceData[];
-}
+
 
 const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
 
-  const decodeBase64Image = (base64String: string) => {
-    const decodedString = atob(base64String);
-    const byteNumbers = new Array(decodedString.length);
-    for (let i = 0; i < decodedString.length; i++) {
-      byteNumbers[i] = decodedString.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: 'image/jpeg' });
-    const dataUrl = URL.createObjectURL(blob);
-    return dataUrl;
-  };
-  // const decodeBase64Image = (base64String: string) => {
-  //   const blob = new Blob([base64String], { type: 'image/jpeg' });
-  //   const dataUrl = URL.createObjectURL(blob);
-  //   return dataUrl;
-  // };
+  const [showModal, setShowModal] = useState(false)
+
+  const viewModal = () => {
+    setShowModal(true)
+  }
+
+  const handleClose = () => {
+    setShowModal(false)
+  }
 
 
   return (
@@ -44,42 +36,52 @@ const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Email</p>
         </div>
-        <div className="col-span-2 flex items-center">
+        <div className="col-span-1 flex items-center">
           <p className="font-medium">Date</p>
         </div>
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Clock In</p>
         </div>
-        <div className="col-span-1 flex items-center">
+        <div className="col-span-2 flex items-center">
           <p className="font-medium">Clock Out</p>
         </div>
         <div className="col-span-1 flex items-center">
-          <p className="font-medium">Attendance Picture</p>
+          <p className="font-medium">Attendance Detail</p>
         </div>
       </div>
 
       {data.map((attendance, index) => (
         <div key={index} className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
           <div className="col-span-1 flex items-center">
-            <p className="text-sm text-black dark:text-white">{attendance.Fullname}</p>
+            <p className="text-sm text-black dark:text-white">{attendance?.first_name} {attendance.last_name}</p>
           </div>
-          <div className="col-span-2 hidden items-center sm:flex">
+          <div className="col-span-1 hidden items-center sm:flex">
             <p className="text-sm text-black dark:text-white">{attendance.designation}</p>
           </div>
-          <div className="col-span-2 flex items-center">
+          <div className="col-span-1 flex items-center">
             <p className="text-sm text-black dark:text-white">{attendance.email}</p>
           </div>
-          <div className="col-span-2 flex items-center">
-            <p className="text-sm text-black dark:text-white">{attendance.attendance_date_time}</p>
+          <div className="col-span-1 flex items-center">
+            <p className="text-sm text-black dark:text-white">{attendance.attendance[0]?.date}</p>
+          </div>
+          <div className="col-span-1 flex items-center">
+            <p className="text-sm text-black dark:text-white">{attendance.attendance[0]?.ClockIn[0]?.time}</p>
           </div>
           <div className="col-span-2 flex items-center">
-            <p className="text-sm text-black dark:text-white">{attendance.attendance_date_time}</p>
+            <p className="text-sm text-black dark:text-white">{attendance.attendance[0]?.ClockOut[0]?.time || "Still clocked in"}</p>
           </div>
-          {/* <div className="col-span-1 flex items-center">
-            <img src={decodeBase64Image(attendance.attendance_picture)} alt="Attendance" className="w-12 h-12 object-cover rounded-full" />
-          </div> */}
+          <div className="col-span-1 flex items-center">
+            <button className="inline-flex items-center justify-center gap-2.5 rounded-md bg-primary py-2 px-8 text-center text-sm font-medium text-white hover:bg-opacity-90 lg:px-2 xl:px-2 " onClick={viewModal} >
+              View Attendence Details
+            </button>
+          </div>
+          {showModal ? (
+            <DashboardModal onClose={handleClose} date={attendance.attendance[0]?.date} clockin={attendance.attendance[0]?.ClockIn[0]?.time} clockout={attendance.attendance[0]?.ClockOut[0]?.time} picture={attendance.attendance[0]?.ClockIn[0]?.attendance_picture} />
+          ) : null}
         </div>
       ))}
+
+
     </div>
   );
 };

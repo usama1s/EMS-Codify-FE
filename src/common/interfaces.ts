@@ -10,12 +10,33 @@ export interface UserData {
     date_of_joining: string;
 }
 
+export interface Attendance {
+    date: String;
+    ClockIn: ClockEntry[];
+    ClockOut: ClockEntry[];
+}
+
+export interface ClockEntry {
+    attendance_picture: any;
+    time: string;
+    location: string;
+    clock_type: string;
+}
+
 export interface AttendanceData {
+    attendance_id: number;
+    user_id: number;
     attendance_picture: string;
-    Fullname: string;
+    attendance: Attendance[];
+    time_zone: string;
+    first_name: string;
+    last_name: string;
     email: string;
-    designation: string; // Assuming designation is a string, update this type if needed
-    attendance_date_time: string;
+    password: string;
+    user_type: number;
+    designation: string;
+    date_of_joining: string | null;
+    profile_picture: string | null;
 }
 
 export interface Coordinates {
@@ -56,6 +77,16 @@ export interface ModalProps {
     };
 }
 
+
+export interface DashboardModalProps {
+    onClose: () => void;
+    date: any
+    clockin: string;
+    clockout: string;
+    picture: any
+}
+
+
 export interface TimerProps {
     isRunning: boolean;
     onStart: () => void;
@@ -66,7 +97,9 @@ export interface Header {
     setSidebarOpen: (arg0: boolean) => void;
 }
 
-
+export interface TableTwoProps {
+    data: AttendanceData[];
+}
 
 
 
