@@ -41,7 +41,7 @@ function App() {
             element={<ProtectedRoute Component={RegisterUser} />}
           />
           <Route
-            path='/mark-attendence'
+            path='/attendance'
             element={<ProtectedRoute Component={MarkAttendence} />}
           />
           <Route

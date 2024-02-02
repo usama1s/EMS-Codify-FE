@@ -1,73 +1,58 @@
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 import Breadcrumb from '../components/Breadcrumb';
-import { registerManager, selectManager } from '../redux/store/slices/managerSlice';
-import { useState } from 'react';
-import { UserData } from '../common/interfaces';
+// import { registerManager, selectManager } from '../redux/store/slices/managerSlice';
+// import { useState } from 'react';
+import { AttendanceData, UserData } from '../common/interfaces';
+// import RegisterModal from '../components/RegisterModal';
+import TableTwo from '../components/TableTwo';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { APIS } from '../apis';
 
-const roles = ['Employee/Intern Attendence', 'Leave Approvel', 'Daily Progress', 'Pay Schedule', 'Employee data', 'Office Decorum'];
-const roleValues: Record<string, number> = {
-    Attendence: 1,
-    Leave: 2,
-    Progress: 3,
-    Pay: 4,
-    Data: 5,
-    Decorum: 6
-};
+// const roles = ['Employee/Intern Attendence', 'Leave Approvel', 'Daily Progress', 'Pay Schedule', 'Employee data', 'Office Decorum']; 
 
 
 
 const RegisterUser = () => {
-    const dispatch = useDispatch();
-    const initialFormData = useSelector(selectManager);
+
+
 
     const userDataString = localStorage.getItem('userData');
     const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
     const userType: number | null = userData ? userData.user_type : null;
 
-    const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
+    const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
 
-    const handleRoleChange = (role: string) => {
-        setSelectedRoles((prevRoles) =>
-            prevRoles.includes(roleValues[role])
-                ? prevRoles.filter((r) => r !== roleValues[role])
-                : [...prevRoles, roleValues[role]]
-        );
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(APIS.getAllManagersAttendence);
+                if (response && response.data) {
+                    setAttendanceData(response.data);
 
-    // Use local state to manage the form data
-    const [formData, setFormData] = useState(initialFormData);
+                }
 
-    const handleChange = (field: string, value: string) => {
-        // Update the corresponding field in the local state
-        setFormData((prevFormData: any) => ({ ...prevFormData, [field]: value }));
-    };
+            } catch (error) {
+                console.error('Error fetching attendance data:', error);
+            }
+        };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+        fetchData();
+    }, []);
 
-        // Check if password and confirm password match
-        if (formData.password !== formData.confirm_password) {
-            alert("Password and Confirm Password do not match!");
-            return;
-        }
 
-        formData.roles = selectedRoles;
-        console.log(formData);
 
-        dispatch(registerManager(formData));
-    };
+
 
     return (
         <>
-            <Breadcrumb pageName={userType === 2 ? "Register Employee" : "Register Manager"} />
+
+            <Breadcrumb pageName={userType === 2 ? "Register Employee" : "All Manager"} />
             <div className="flex flex-col gap-9">
                 <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-                    <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-                        <h3 className="font-medium text-black dark:text-white">
-                            Register Form
-                        </h3>
-                    </div>
-                    <form onSubmit={handleSubmit}>
+                    <TableTwo data={attendanceData} />
+
+                    {/* <form onSubmit={handleSubmit}>
                         <div className="p-6.5">
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className="w-full xl:w-1/2">
@@ -131,21 +116,18 @@ const RegisterUser = () => {
                                 />
                             </div>
                             {userType !== 2 && (
-                                <div className="mb-4.5 flex-wrap">
+                                <div className="relative mb-4.5 flex flex-col ">
                                     <label className="mb-2.5 block text-black dark:text-white">Assign roles</label>
                                     {roles.map((role) => (
-                                        <div key={role} className="flex items-center mb-2 mr-4">
+                                        <label key={role}>
                                             <input
                                                 type="checkbox"
-                                                id={role}
-                                                checked={selectedRoles.includes(roleValues[role] as number)}
-                                                onChange={() => handleRoleChange(role)}
-                                                className="mr-2"
+                                                value={roleValues[role]}
+                                                checked={selectedRoles.includes(role)}
+                                                onChange={() => handleCheckboxChange(role)}
                                             />
-                                            <label htmlFor={role} className="text-black dark:text-white">
-                                                {role}
-                                            </label>
-                                        </div>
+                                            {role}
+                                        </label>
                                     ))}
                                 </div>
                             )}
@@ -176,7 +158,8 @@ const RegisterUser = () => {
                                 Register
                             </button>
                         </div>
-                    </form>
+                    </form> */}
+
                 </div>
             </div>
         </>

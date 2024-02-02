@@ -2,12 +2,14 @@ import { TableTwoProps } from "../common/interfaces";
 
 import React, { useState } from 'react';
 import DashboardModal from "./DashboardModal";
+import RegisterModal from "./RegisterModal";
 
 
 
 const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
 
   const [showModal, setShowModal] = useState(false)
+  const [showRegisterModal, setShowRegisterModal] = useState(false)
 
   const viewModal = () => {
     setShowModal(true)
@@ -16,14 +18,25 @@ const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
   const handleClose = () => {
     setShowModal(false)
   }
+  const closeRegisterModal = () => {
+    setShowRegisterModal(false)
+  }
+
+  const openRegisterModal = () => {
+    setShowRegisterModal(true)
+  }
+
 
 
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-      <div className="py-6 px-4 md:px-6 xl:px-7.5">
+      <div className="flex justify-between py-6 px-4 md:px-6 xl:px-7.5">
         <h4 className="text-xl font-semibold text-black dark:text-white">
           All Managers Attendence
         </h4>
+        <button className="inline-flex items-center justify-center gap-2.5 rounded-md bg-primary py-2 px-8 text-center text-sm font-medium text-white hover:bg-opacity-90 lg:px-2 xl:px-2 " onClick={openRegisterModal} >
+          Register Manager
+        </button>
       </div>
 
       <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
@@ -80,7 +93,9 @@ const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
           ) : null}
         </div>
       ))}
-
+      {showRegisterModal ? (
+        <RegisterModal onClose={closeRegisterModal} />
+      ) : null}
 
     </div>
   );

@@ -1,4 +1,5 @@
 export interface UserData {
+    roles: any;
     user_id: number;
     profile_picture: string | null;
     first_name: string;
@@ -9,6 +10,18 @@ export interface UserData {
     designation: string;
     date_of_joining: string;
 }
+
+export interface ManagerInterface {
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    confirm_password: string;
+    user_type: number;
+    roles: number[];
+    designation: string;
+    dateOfJoining: string;
+  }
 
 export interface Attendance {
     date: String;
@@ -100,6 +113,11 @@ export interface Header {
 export interface TableTwoProps {
     data: AttendanceData[];
 }
+export interface RegisterModalProps {
+    onClose: () => void;
+
+}
+
 
 
 
@@ -148,3 +166,120 @@ export interface TableTwoProps {
 // }
 
 // Do something with the captured image, location, and location name.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ {/* <form onSubmit={handleSubmit}>
+                            <div className="relative bg-black p-6 flex-auto">
+                                <div className="w-full">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                        First name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter your first name"
+                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                        onChange={(e) => handleChange('first_name', e.target.value)}
+                                    />
+                                </div>
+                                <div className="w-full ">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                        Last name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter your last name"
+                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                        onChange={(e) => handleChange('last_name', e.target.value)}
+                                    />
+                                </div>
+                                <div className="mb-4.5">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                        Email <span className="text-meta-1">*</span>
+                                    </label>
+                                    <input
+                                        type="email"
+                                        placeholder="Enter your email address"
+                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                        onChange={(e) => handleChange('email', e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="mb-4.5">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                        Password
+                                    </label>
+                                    <input
+                                        type="password"
+                                        placeholder="Password should be more than 8 characters"
+                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                        onChange={(e) => handleChange('password', e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="mb-4.5">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                        Confirm Password
+                                    </label>
+                                    <input
+                                        type="password"
+                                        placeholder="Password should be more than 8 characters"
+                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                        onChange={(e) => handleChange('confirm_password', e.target.value)}
+                                    />
+                                </div>
+
+
+                                {userType !== 2 && (
+                                    <div className="relative mb-4.5 flex flex-col ">
+                                        <label className="mb-2.5 block text-black dark:text-white">Assign roles</label>
+                                        {roles.map((role) => (
+                                            <label key={role}>
+                                                <input
+                                                    type="checkbox"
+                                                    value={roleValues[role]}
+                                                    checked={selectedRoles.includes(role)}
+                                                    onChange={() => handleCheckboxChange(role)}
+                                                />
+                                                {role}
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <div className="mb-4.5">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                        Designation
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                        onChange={(e) => handleChange('designation', e.target.value)}
+                                    />
+                                </div>
+                                <div className="mb-4.5">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                        Date of joining
+                                    </label>
+                                    <input
+                                        type="date"
+                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                        onChange={(e) => handleChange('date_of_joining', e.target.value)}
+                                    />
+                                </div>
+
+                            </div>
+                        
+                            
+                        </form> */}

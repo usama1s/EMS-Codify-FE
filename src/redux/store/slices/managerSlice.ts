@@ -1,22 +1,10 @@
 // managerSlice.ts
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { APIS } from '../../../apis';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { ManagerInterface } from '../../../common/interfaces';
 
 
-export interface ManagerState {
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  confirm_password: string;
-  user_type: number;
-  roles: number[];
-  designation: string;
-  dateOfJoining: string;
-}
 
-const initialState: ManagerState = {
+const initialState: ManagerInterface = {
   first_name: '',
   last_name: '',
   email: '',
@@ -28,20 +16,13 @@ const initialState: ManagerState = {
   dateOfJoining: '',
 };
 
-const registerManager: any = createAsyncThunk('manager/registerManager', async (data) => {
-  try {
-    const response = await axios.post(APIS.registerManager, data);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-});
+
 
 const managerSlice = createSlice({
   name: 'manager',
   initialState,
   reducers: {
-    registerManager: (state, action: PayloadAction<ManagerState>) => {
+    registerManager: (state, action: PayloadAction<ManagerInterface>) => {
       // Ensure to handle the action payload correctly
       return { ...state, ...action.payload };
     },
@@ -52,5 +33,4 @@ const managerSlice = createSlice({
 const managerReducer = managerSlice.reducer;
 
 export const selectManager = (state: { manager: any; }) => state.manager;
-export { registerManager };
 export default managerReducer;

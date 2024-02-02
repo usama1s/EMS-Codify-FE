@@ -19,9 +19,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const userDataString = localStorage.getItem('userData');
   const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
   const userType: number | null = userData ? userData.user_type : null;
+  const roles: [number] | null = userData ? userData.roles : null;
 
 
-  console.log(userData);
+  console.log(roles);
   const location = useLocation();
   const { pathname } = location;
 
@@ -110,11 +111,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
               MENU
             </h3>
-            <ul className="mb-6 flex flex-col gap-1.5">
+            {/* <ul className="mb-6 flex flex-col gap-1.5">
               {NAVIGATION_LINKS.map((link, index) => (
-                
-                // Check if the link is applicable to the user type
-                (link.userTypes && userType && link.userTypes.includes(userType)) && (
+                (link.userTypes && userType && link.userTypes.includes(userType) && link.role.includes(roles)) && (
                   <li key={index}>
                     <NavLink
                       to={link.path}
@@ -126,7 +125,54 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </li>
                 )
               ))}
+            </ul> */}
+            <ul className="mb-2 flex flex-col gap-1.5">
+              {NAVIGATION_LINKS.map((link, index) => {
+                // Check if user type is included in the userTypes array
+                const userTypeMatch = link.userTypes && userType && link.userTypes.includes(userType);
+                // Check if the role is 0
+                const roleMatch = link.role && link.role.includes(0);
+                // Render the link only if both userType and roles match
+                if (userTypeMatch && roleMatch) {
+                  return (
+                    <li key={index}>
+                      <NavLink
+                        to={link.path}
+                        className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes(link.path) && 'bg-graydark dark:bg-meta-4'
+                          }`}
+                      >
+                        {link.text}
+                      </NavLink>
+                    </li>
+                  );
+                }
+                return null; // Return null for links that don't match the criteria
+              })}
             </ul>
+            <ul className="mb-6 flex flex-col gap-1.5">
+              {NAVIGATION_LINKS.map((link, index) => {
+                // Check if user type is included in the userTypes array
+                const userTypeMatch = link.userTypes && userType && link.userTypes.includes(userType);
+                // Check if there are roles and if any role matches
+                const roleMatch = roles && roles.some(role => link.role.includes(role));
+                // Render the link only if both userType and roles match
+                if (userTypeMatch && roleMatch) {
+                  return (
+                    <li key={index}>
+                      <NavLink
+                        to={link.path}
+                        className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes(link.path) && 'bg-graydark dark:bg-meta-4'
+                          }`}
+                      >
+                        {link.text}
+                      </NavLink>
+                    </li>
+                  );
+                }
+                return null; // Return null for links that don't match the criteria
+              })}
+            </ul>
+
           </div>
         </nav>
       </div>
