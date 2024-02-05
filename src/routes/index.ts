@@ -9,7 +9,7 @@ const Settings = lazy(() => import('../pages/Settings'));
 const Tables = lazy(() => import('../pages/Tables'));
 const Dashboard = lazy(() => import('../pages/Dashboard'));
 const RegisterUser = lazy(() => import('../pages/RegisterUser'));
-const MarkAttendence = lazy(() => import('../pages/MarkAttendence'));
+const MarkAttendence = lazy(() => import('../pages/MarkAttendance'));
 
 
 const Alerts = lazy(() => import('../pages/UiElements/Alerts'));

@@ -21,7 +21,7 @@ export interface ManagerInterface {
     roles: number[];
     designation: string;
     dateOfJoining: string;
-  }
+}
 
 export interface Attendance {
     date: String;
@@ -96,7 +96,23 @@ export interface DashboardModalProps {
     date: any
     clockin: string;
     clockout: string;
-    picture: any
+    clockInPicture: any,
+    clockOutPicture: any,
+}
+
+export interface ManagersModalProps {
+    onClose: () => void;
+    first_name: string;
+    last_name: string;
+    email: string;
+    user_type: number;
+    roles: number[];
+    designation: string;
+    dateOfJoining: string;
+}
+
+export interface AttendanceModalProps {
+    onClose: () => void;
 }
 
 
@@ -113,6 +129,15 @@ export interface Header {
 export interface TableTwoProps {
     data: AttendanceData[];
 }
+export interface ManagersTableProps {
+    data: ManagerInterface[];
+}
+
+export interface AttendanceTableProps {
+    data: AttendanceData[];
+}
+
+
 export interface RegisterModalProps {
     onClose: () => void;
 
@@ -180,7 +205,7 @@ export interface RegisterModalProps {
 
 
 
- {/* <form onSubmit={handleSubmit}>
+{/* <form onSubmit={handleSubmit}>
                             <div className="relative bg-black p-6 flex-auto">
                                 <div className="w-full">
                                     <label className="mb-2.5 block text-black dark:text-white">

@@ -4,11 +4,11 @@ import { Toaster } from 'react-hot-toast';
 import SignIn from './pages/Authentication/SignIn';
 import Loader from './common/Loader';
 import RegisterUser from './pages/RegisterUser';
-import MarkAttendence from './pages/MarkAttendence';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import ProtectedRoute from './routes/protectedRoute';
 import Dashboard from './pages/Dashboard';
+import MarkAttendance from './pages/MarkAttendance';
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
@@ -42,7 +42,7 @@ function App() {
           />
           <Route
             path='/attendance'
-            element={<ProtectedRoute Component={MarkAttendence} />}
+            element={<ProtectedRoute Component={MarkAttendance} />}
           />
           <Route
             path='/profile'

@@ -1,20 +1,17 @@
-import React, { useRef, useCallback, useState } from 'react';
-import Webcam from 'react-webcam';
-import Breadcrumb from '../components/Breadcrumb';
-import { attendance } from '../redux/store/slices/attendanceSlice';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { UserData } from '../common/interfaces';
-import axios from 'axios';
-import { APIS } from '../apis';
-import Modal from '../components/Modal';
-import { resetTimer, startTimer } from '../redux/store/slices/timerSlice';
 
+import React, { useCallback, useRef, useState } from "react";
+import { AttendanceModalProps, UserData } from "../common/interfaces";
+import Webcam from "react-webcam";
+import { attendance } from "../redux/store/slices/attendanceSlice";
+import { APIS } from "../apis";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { resetTimer, startTimer } from "../redux/store/slices/timerSlice";
+import ClockOutWarningModal from "./ClockOutWarningModal";
 
-
-const MarkAttendence: React.FC = () => {
+const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
     const webcamRef = useRef<Webcam>(null);
-    // let clock_type: string;
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
@@ -181,56 +178,50 @@ const MarkAttendence: React.FC = () => {
         setShowModal(false)
     }
 
-    // const getLocationName = async (latitude: number, longitude: number): Promise<string> => {
-    //     const apiUrl = `https://api.example.com/reverse-geocode?lat=${latitude}&lon=${longitude}`;
 
-    //     try {
-    //         const response = await fetch(apiUrl);
-    //         const data = await response.json();
 
-    //         // Extract the location name from the response.
-    //         const locationName = data.results[0]?.formatted_address || 'Unknown Location';
-    //         return locationName;
-    //     } catch (error) {
-    //         console.error('Error fetching location name:', error);
-    //         return 'Unknown Location';
-    //     }
-    // };
+    const handleClose = async () => {
+        onClose()
+
+    };
 
     return (
         <>
-            <Breadcrumb pageName="Attendance" />
+            <div className="rounded-md justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none ">
+                <div className=" relative w-1/2 h-2/4 ">
+                    <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-black outline-none focus:outline-none ">
 
-            <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark" style={{ height: '700px' }}>
-                <div className="relative z-20 h-700 md:h-700 flex flex-col items-center justify-center mt-7">
-                    {/* Adjust the height and width as needed */}
-                    <Webcam
-                        audio={false}
-                        height={700}
-                        ref={webcamRef}
-                        screenshotFormat="image/jpeg"
-                        width={500}
-                        mirrored={false}
-                        style={{ transform: "scaleX(-1)" }}
-                    />
-                    <div className='flex gap-10'>
-                        <button className="inline-flex items-center justify-center gap-2.5 rounded-md bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10 mt-10" onClick={captureClockIn}>
-                            Clock In
-                        </button>
-                        <button className="inline-flex items-center justify-center gap-2.5 rounded-md bg-danger py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10 mt-10" onClick={captureClockOut}>
-                            Clock Out
-                        </button>
+                        <div className="relative z-20 h-700 md:h-700 flex flex-col items-center justify-center mt-7">
+                            <Webcam
+                                audio={false}
+                                height={700}
+                                ref={webcamRef}
+                                screenshotFormat="image/jpeg"
+                                width={500}
+                                mirrored={false}
+                                style={{ transform: "scaleX(-1)" }}
+                            />
+                            <div className='flex gap-10 mb-10'>
+                                <button className="inline-flex items-center justify-center gap-2.5 rounded-md bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10 mt-10" onClick={captureClockIn}>
+                                    Clock In
+                                </button>
+                                <button className="inline-flex items-center justify-center gap-2.5 rounded-md bg-danger py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10 mt-10" onClick={captureClockOut}>
+                                    Clock Out
+                                </button>
+                            </div>
+                            <button className="absolute inline-flex items-center  right-0 bottom-0 rounded-md bg-secondary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10 mb-10 mr-10 h-9" onClick={handleClose}>
+                                Close
+                            </button>
+                            {showModal ? (
+                                <ClockOutWarningModal isOpen={showModal} hours={hours} clockOutData={clockOutData} onClose={handleCloseModal} />
+                            ) : null}
+                        </div>
                     </div>
-                    {showModal ? (
-                        <Modal isOpen={showModal} hours={hours} clockOutData={clockOutData} onClose={handleCloseModal} />
-                    ) : null}
                 </div>
-
             </div>
+            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
         </>
     );
 };
 
-export default MarkAttendence;
-
-
+export default AttendanceModal;

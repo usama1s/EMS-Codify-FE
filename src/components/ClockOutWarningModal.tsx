@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 
 
 
-const Modal: React.FC<ModalProps> = ({ hours, clockOutData, onClose }) => {
+const ClockOutWarningModal: React.FC<ModalProps> = ({ hours, clockOutData, onClose }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleYesClick = async () => {
@@ -75,4 +75,4 @@ const Modal: React.FC<ModalProps> = ({ hours, clockOutData, onClose }) => {
     );
 };
 
-export default Modal;
+export default ClockOutWarningModal;

@@ -28,8 +28,8 @@ export const NAVIGATION_LINKS = [
   {
     path: "/attendance",
     text: "Attendance",
-    userTypes: [1, 2],
-    role: [1]
+    userTypes: [2, 3],
+    role: [0]
   },
   {
     path: "/leave-approval",

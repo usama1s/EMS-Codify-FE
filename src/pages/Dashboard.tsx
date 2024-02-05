@@ -1,8 +1,9 @@
-import TableTwo from '../components/TableTwo.tsx';
+import TableTwo from '../components/AllManagersAttendanceTable.tsx';
 import axios from 'axios';
 import { APIS } from '../apis.ts';
 import { AttendanceData } from '../common/interfaces.ts';
 import { useEffect, useState } from 'react';
+import Breadcrumb from '../components/Breadcrumb.tsx';
 
 const Dashboard = () => {
   const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
@@ -26,6 +27,7 @@ const Dashboard = () => {
 
   return (
     <>
+      <Breadcrumb pageName={"Dashboard"} />
       <TableTwo data={attendanceData} />
     </>
   );
