@@ -9,6 +9,8 @@ import Settings from './pages/Settings';
 import ProtectedRoute from './routes/protectedRoute';
 import Dashboard from './pages/Dashboard';
 import MarkAttendance from './pages/MarkAttendance';
+import EmployeeData from './pages/EmployeeData';
+import AllEmployeeAttendance from './pages/AllEmployeeAttendance';
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
@@ -51,6 +53,14 @@ function App() {
           <Route
             path='/settings'
             element={<ProtectedRoute Component={Settings} />}
+          />
+          <Route
+            path='/employee-data'
+            element={<ProtectedRoute Component={EmployeeData} />}
+          />
+          <Route
+            path='/employee-attendence-and-progress'
+            element={<ProtectedRoute Component={AllEmployeeAttendance} />}
           />
         </Route>
 

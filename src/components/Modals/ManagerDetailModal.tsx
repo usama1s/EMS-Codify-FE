@@ -1,6 +1,6 @@
 
 import React from "react";
-import { ManagersModalProps } from "../common/interfaces";
+import { ManagersModalProps } from "../../common/interfaces";
 
 const ManagerModal: React.FC<ManagersModalProps> = ({ onClose, first_name, last_name, email, dateOfJoining, roles }) => {
     const roleValues: Record<number, string> = {

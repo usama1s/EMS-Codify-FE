@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Breadcrumb from '../components/Breadcrumb';
 import axios from 'axios';
 import { APIS } from '../apis';
-import AttendenceTable from '../components/Attendancetable';
+import AttendenceTable from '../components/Tables/Attendancetable';
 import { AttendanceData, UserData } from '../common/interfaces';
 
 
@@ -18,7 +18,7 @@ const MarkAttendance: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(APIS.getAllManagers);
+                const response = await axios.get(APIS.getAttendanceByUserId, { params: { userId } });
                 if (response && response.data) {
                     setAllAttendances(response.data);
                 }

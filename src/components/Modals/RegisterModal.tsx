@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { selectManager } from "../redux/store/slices/managerSlice";
-import { RegisterModalProps, UserData } from "../common/interfaces";
+import { selectManager } from "../../redux/store/slices/managerSlice";
+import { RegisterModalProps, UserData } from "../../common/interfaces";
 import axios from "axios";
-import { APIS } from "../apis";
+import { APIS } from "../../apis";
 
 
 const roles: any[] = [
-    'Employee/Intern Attendence',
+    'Employee/Intern Attendence and Progress',
     'Leave Approvel',
-    'Daily Progress',
     'Pay Schedule',
     'Employee Data',
     'Office Decorum'
@@ -18,10 +17,9 @@ const roles: any[] = [
 const roleValues: Record<string, number> = {
     'Employee/Intern Attendence': 1,
     'Leave Approvel': 2,
-    'Daily Progress': 3,
-    'Pay Schedule': 4,
-    'Employee Data': 5,
-    'Office Decorum': 6
+    'Pay Schedule': 3,
+    'Employee Data': 4,
+    'Office Decorum': 5
 };
 
 const inputFields = [

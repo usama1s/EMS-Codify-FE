@@ -1,8 +1,8 @@
-import { ManagersTableProps } from "../common/interfaces";
+import { ManagersTableProps } from "../../common/interfaces";
 
 import React, { useState } from 'react';
-import RegisterModal from "./RegisterModal";
-import ManagerModal from "./ManagerDetailModal";
+import RegisterModal from "../Modals/RegisterModal";
+import ManagerModal from "../Modals/ManagerDetailModal";
 
 
 

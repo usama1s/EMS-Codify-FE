@@ -1,9 +1,9 @@
 import axios from "axios";
 import React from "react";
-import { APIS } from "../apis";
+import { APIS } from "../../apis";
 import { useNavigate } from "react-router-dom";
-import { ModalProps } from "../common/interfaces";
-import { resetTimer } from '../redux/store/slices/timerSlice';
+import { ModalProps } from "../../common/interfaces";
+import { resetTimer } from '../../redux/store/slices/timerSlice';
 import { useDispatch } from "react-redux";
 
 

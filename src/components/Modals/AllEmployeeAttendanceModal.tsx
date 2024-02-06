@@ -1,8 +1,8 @@
 
 import React from "react";
-import { DashboardModalProps } from "../common/interfaces";
+import { AllEmployeeAttendanceModalProps } from "../../common/interfaces";
 
-const DashboardModal: React.FC<DashboardModalProps> = ({ onClose, date, clockin, clockout, clockInPicture, clockOutPicture }) => {
+const AllEmployeeAttendanceModal: React.FC<AllEmployeeAttendanceModalProps> = ({ onClose, date, clockin, clockout, clockInPicture, clockOutPicture, last_name, first_name, clockInLocation, clockOutLocation }) => {
 
     const handleClose = async () => {
         onClose()
@@ -36,7 +36,7 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ onClose, date, clockin,
 
                             <div className="flex justify-between">
                                 <h2 className="font-extrabold">Name</h2>
-                                <p className="text-sm text-black dark:text-white">Anoosh</p>
+                                <p className="text-sm text-black dark:text-white">{first_name} {last_name}</p>
                             </div>
 
                             <div className="mt-5 flex items-center justify-between">
@@ -52,7 +52,7 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ onClose, date, clockin,
                                 </div>
                                 <div className="mt-3 flex justify-between">
                                     <p className="ml-5 text-sm text-black dark:text-white">location:</p>
-                                    <p className="text-sm text-black dark:text-white">location</p>
+                                    <p className="text-sm text-black dark:text-white">{clockInLocation}</p>
                                 </div>
                                 <div className="mt-3 flex justify-between">
                                     <p className="ml-5 text-sm text-black dark:text-white"> Clock in image:</p>
@@ -68,7 +68,7 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ onClose, date, clockin,
                                 </div>
                                 <div className="mt-3 flex justify-between">
                                     <p className="ml-5 text-sm text-black dark:text-white">location:</p>
-                                    <p className="text-sm text-black dark:text-white">location</p>
+                                    <p className="text-sm text-black dark:text-white">{clockOutLocation}</p>
                                 </div>
                                 <div className="mt-3 flex justify-between">
                                     <p className="ml-5 text-sm text-black dark:text-white"> Clock out image:</p>
@@ -93,4 +93,4 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ onClose, date, clockin,
     );
 };
 
-export default DashboardModal;
+export default AllEmployeeAttendanceModal;

@@ -1,17 +1,17 @@
-import TableTwo from '../components/Tables/AllManagersAttendanceTable.tsx';
 import axios from 'axios';
 import { APIS } from '../apis.ts';
 import { AttendanceData } from '../common/interfaces.ts';
 import { useEffect, useState } from 'react';
 import Breadcrumb from '../components/Breadcrumb.tsx';
+import EmployeeAttendanceTable from '../components/Tables/AllEmployeeAttendenceTable.tsx';
 
-const Dashboard = () => {
+const AllEmployeeAttendance = () => {
   const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(APIS.getAllManagersAttendence);
+        const response = await axios.get(APIS.getAllEmployeesAttendence);
         if (response && response.data) {
           setAttendanceData(response.data);
 
@@ -28,9 +28,9 @@ const Dashboard = () => {
   return (
     <>
       <Breadcrumb pageName={"Dashboard"} />
-      <TableTwo data={attendanceData} />
+      <EmployeeAttendanceTable data={attendanceData} />
     </>
   );
 };
 
-export default Dashboard;
+export default AllEmployeeAttendance;

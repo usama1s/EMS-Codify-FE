@@ -1,8 +1,8 @@
-import { TableTwoProps } from "../common/interfaces";
+import { TableTwoProps } from "../../common/interfaces";
 
 import React, { useState } from 'react';
-import DashboardModal from "./DashboardModal";
-import RegisterModal from "./RegisterModal";
+import DashboardModal from "../Modals/DashboardModal";
+import RegisterModal from "../Modals/RegisterModal";
 
 
 

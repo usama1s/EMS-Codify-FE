@@ -14,12 +14,6 @@ export const NAVIGATION_LINKS = [
     role: [0]
   },
   {
-    path: "/profile",
-    text: "Profile",
-    userTypes: [1, 2, 3],
-    role: [0]
-  },
-  {
     path: "/settings",
     text: "Settings",
     userTypes: [1, 2, 3],
@@ -27,22 +21,21 @@ export const NAVIGATION_LINKS = [
   },
   {
     path: "/attendance",
-    text: "Attendance",
+    text: "My Attendance",
     userTypes: [2, 3],
     role: [0]
+  },
+  {
+    path: "/employee-attendence-and-progress",
+    text: "Attendance and Progress",
+    userTypes: [2],
+    role: [1]
   },
   {
     path: "/leave-approval",
     text: "Leave Approval",
     userTypes: [2],
     role: [2]
-
-  },
-  {
-    path: "/daily-progress",
-    text: "Employee Daily Progress",
-    userTypes: [2],
-    role: [3]
 
   },
   {
@@ -73,4 +66,78 @@ export const INPUT_FIELDS_PERSONAL_INFO = [
   { label: 'Role', type: 'text', name: 'role', placeholder: 'devidjhon24' },
   { label: 'Designation', type: 'text', name: 'designation', placeholder: 'Senior Software Engineer' },
   { label: 'Date of Joining', type: 'text', name: 'date_of_joining', placeholder: 'YYYY-MM-DD' },
+];
+
+
+export const REGISTER_EMPLOYEE_FIELDS = [
+  {
+    name: 'first_name',
+    type: 'text',
+    placeholder: 'Enter your first name',
+    label: 'First Name',
+  },
+  {
+    name: 'last_name',
+    type: 'text',
+    placeholder: 'Enter your last name',
+    label: 'Last Name',
+  },
+  {
+    name: 'email',
+    type: 'email',
+    placeholder: 'Enter your email address',
+    label: 'Email',
+  },
+  {
+    name: 'password',
+    type: 'password',
+    placeholder: 'Password should be more than 8 characters',
+    label: 'Password',
+  },
+  {
+    name: 'confirm_password',
+    type: 'password',
+    placeholder: 'Password should be more than 8 characters',
+    label: 'Confirm Password',
+  },
+  {
+    name: 'designation',
+    type: 'text',
+    placeholder: 'Employee designation',
+    label: 'Designation',
+  },
+  {
+    name: 'date_of_joining',
+    type: 'date',
+    placeholder: 'Employee designation',
+    label: 'Date Of Joining',
+  },
+];
+
+
+export const EMPLOYEE_CONTRACT_FIELDS = [
+  {
+    name: 'reporting_manager',
+    type: 'text',
+    placeholder: 'reporting manager',
+    label: 'Reporting Manager',
+  },
+  {
+    name: 'contract_start_date',
+    type: 'date',
+    placeholder: '22-Jan-2022',
+    label: 'Start Date of Contract',
+  },
+  {
+    name: 'contract_end_date',
+    type: 'date',
+    placeholder: '22-Jan-2022',
+    label: 'End Date of Contract',
+  },
+  {
+    name: 'pay',
+    type: 'number',
+    placeholder: '60,000',
+    label: 'Employee Pay',
+  },
 ];

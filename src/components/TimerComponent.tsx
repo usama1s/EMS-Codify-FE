@@ -9,11 +9,15 @@ import { RootState } from "../redux/store";
 
 
 const TimerComponent = () => {
-    const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
-    const isRunning = useSelector((state: RootState) => state.timer.isRunning);
     const userDataString = localStorage.getItem('userData');
     const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
     const userId: number | null = userData ? userData.user_id : null;
+    if (userId == 1) {
+        return null
+    }
+    
+    const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
+    const isRunning = useSelector((state: RootState) => state.timer.isRunning);
 
     const checkHours = async () => {
         const user_id = userId;
@@ -71,9 +75,6 @@ const TimerComponent = () => {
     }, [isRunning]);
 
 
-
-
-
     const formatTime = (value: number): string => {
         return value < 10 ? `0${value}` : `${value}`;
     };
@@ -81,6 +82,8 @@ const TimerComponent = () => {
     const hours = Math.floor(elapsedSeconds / 3600);
     const minutes = Math.floor((elapsedSeconds % 3600) / 60);
     const seconds = elapsedSeconds % 60;
+
+   
 
     return (
         <div className="text-lg text-white">

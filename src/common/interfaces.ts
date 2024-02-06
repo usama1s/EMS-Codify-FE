@@ -23,6 +23,23 @@ export interface ManagerInterface {
     dateOfJoining: string;
 }
 
+
+export interface EmployeeInterface {
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    confirm_password: string;
+    user_type: number;
+    designation: string;
+    date_of_joining: string;
+    reporting_manager: number;
+    contract_start_date: string;
+    contract_end_date: string;
+    pay: number;
+    contract_status: number;
+}
+
 export interface Attendance {
     date: String;
     ClockIn: ClockEntry[];
@@ -100,6 +117,19 @@ export interface DashboardModalProps {
     clockOutPicture: any,
 }
 
+export interface AllEmployeeAttendanceModalProps {
+    onClose: () => void;
+    first_name: string;
+    last_name: string;
+    date: any;
+    clockin: string;
+    clockout: string;
+    clockInPicture: any,
+    clockOutPicture: any,
+    clockInLocation: string,
+    clockOutLocation: string,
+}
+
 export interface ManagersModalProps {
     onClose: () => void;
     first_name: string;
@@ -107,6 +137,16 @@ export interface ManagersModalProps {
     email: string;
     user_type: number;
     roles: number[];
+    designation: string;
+    dateOfJoining: string;
+}
+
+export interface EmployeeDetailModalProps {
+    onClose: () => void;
+    first_name: string;
+    last_name: string;
+    email: string;
+    user_type: number;
     designation: string;
     dateOfJoining: string;
 }
@@ -140,7 +180,15 @@ export interface AttendanceTableProps {
 
 export interface RegisterModalProps {
     onClose: () => void;
+}
 
+export interface PrimaryButtonInterface {
+    onClick: () => void;
+    children: React.ReactNode;
+}
+
+export interface EmployeeProgressModalInterface {
+    onClose: () => void;
 }
 
 

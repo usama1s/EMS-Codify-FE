@@ -1,13 +1,13 @@
 
 import React, { useCallback, useRef, useState } from "react";
-import { AttendanceModalProps, UserData } from "../common/interfaces";
+import { AttendanceModalProps, UserData } from "../../common/interfaces";
 import Webcam from "react-webcam";
-import { attendance } from "../redux/store/slices/attendanceSlice";
-import { APIS } from "../apis";
+import { attendance } from "../../redux/store/slices/attendanceSlice";
+import { APIS } from "../../apis";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { resetTimer, startTimer } from "../redux/store/slices/timerSlice";
+import { resetTimer, startTimer } from "../../redux/store/slices/timerSlice";
 import ClockOutWarningModal from "./ClockOutWarningModal";
 
 const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
