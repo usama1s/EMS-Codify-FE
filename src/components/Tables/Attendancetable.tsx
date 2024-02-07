@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import AttendanceModal from '../Modals/AttendanceModal';
-import { AttendanceTableProps } from '../../common/interfaces';
+import { AttendanceTableProps, UserData } from '../../common/interfaces';
 import PrimaryButton from '../UI/PrimaryButton';
 import EmployeeProgressModal from '../Modals/EmployeeProgressModal';
+import axios from 'axios';
+import { APIS } from '../../apis';
 
 
 
@@ -10,6 +12,11 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
 
     const [showAttendanceModal, setshowAttendance] = useState(false)
     const [showProgressModal, setshowProgressModal] = useState(false)
+
+    const userDataString = localStorage.getItem('userData');
+    const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
+    const userId: number | null = userData ? userData.user_id : null;
+
     // const [showRegisterModal, setShowRegisterModal] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(null);
     const [currentdataIndex, setCurrentdataIndex] = useState(null);
@@ -17,11 +24,49 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
     const openAttendanceModal = () => {
         setshowAttendance(true)
     }
-
-    const openProgressModal = () => {
+    const openProgressModal = async () => {
+        // const clockInStatus = await checkClockStatusToAddProgress();
+        // if (clockInStatus == "Not clocked in") {
+        //     alert("First clock in to add progress")
+        // }
+        // else if (clockInStatus == "CI") {
+        //     setshowProgressModal(true)
+        // }
+        // else if (clockInStatus == "CO") {
+        //     alert("First clock in to add progress")
+        // }
         setshowProgressModal(true)
+        
     }
+    const checkClockStatusToAddProgress = async () => {
+        try {
+            const currentDate = new Date();
 
+            if (currentDate.getTimezoneOffset() !== -300) {
+                const estdate = new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+                const date = estdate.toISOString().split('T')[0];
+                const response = await axios.get(APIS.getCLockInStatusByUserIdAndDate, { params: { userId, date } });
+                if (response) {
+                    if (response.data.message) {
+                        const message = response.data.message
+                        return message
+                    } else {
+                        const clockType = response.data.clock_type
+                        return clockType
+                    }
+                }
+            } else {
+                const date = currentDate.toISOString().split('T')[0];
+                const response = await axios.get(APIS.getCLockInStatusByUserIdAndDate, { params: { userId, date } });
+                if (response) {
+                    const message = response.data.message
+                    return message
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching attendance data:', error);
+        }
+    }
     const closeProgressModal = () => {
         setshowProgressModal(false)
     }

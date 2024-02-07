@@ -11,10 +11,14 @@ export const APIS = {
     getAllEmployees: `${BaseURL}manager/get-all-employees`,
     registerEmployee: `${BaseURL}manager/register-employee`,
     getAllEmployeesAttendence: `${BaseURL}manager/get-all-employees-attendance`,
-    getAttendanceByUserId: `${BaseURL}manager/get-attendance/:userId`,
     // ATTENDANCE
     markAttendance: `${BaseURL}attendence/insert-attendence`,
     getClockInTime: `${BaseURL}attendence/get-clock-in-time/:user_id`,
     clockOut: `${BaseURL}attendence/clock-out`,
+    // SHARED
+    getAttendanceByUserId: `${BaseURL}shared/get-attendance/:userId`,
+    getCLockInStatusByUserIdAndDate: `${BaseURL}shared/get-clockin-status/:userId/:date`,
+    addDailyProgress: `${BaseURL}shared/add-daily-progress`,
+    getClockInTimeByUserIdAndDate: `${BaseURL}shared/get-clockin-time/:userId/:date`,
 };
 
