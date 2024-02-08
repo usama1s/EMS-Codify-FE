@@ -9,67 +9,130 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
     const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
     const userId: number | null = userData ? userData.user_id : null;
 
-    const [progressItems, setProgressItems] = useState([{ id: 1, startTime: "7:30", endTime: "8:00", title: "", description: "" }]);
-
+    const [progressItems, setProgressItems] = useState<any[]>([]);
+    const [dataFetched, setDataFetched] = useState<boolean>(false);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const currentDate = new Date();
-    
-                if (currentDate.getTimezoneOffset() !== -300) {
-                    const estdate = new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-                    const date = estdate.toISOString().split('T')[0];
-                    const response = await axios.get(APIS.getClockInTimeByUserIdAndDate, { params: { userId, date } });
-                    if (response) {
-                        if (response.data) {
-                            const time = response.data;
-                            const [hours] = time.split(':').map(Number);
-                            const nextHour = (hours + 1) % 24;
-                            // Update the startTime and endTime of the first item in progressItems
-                            setProgressItems(prevState => [{...prevState[0], startTime: time, endTime: `${nextHour.toString().padStart(2, '0')}:00`}, ...prevState.slice(1)]);
-                        }
-                    }
-                } else {
-                    const date = currentDate.toISOString().split('T')[0];
-                    const response = await axios.get(APIS.getClockInTimeByUserIdAndDate, { params: { userId, date } });
-                    if (response) {
-                        const time = response.data;
-                        const [hours] = time.split(':').map(Number);
-                        const nextHour = (hours + 1) % 24;
-                        // Update the startTime and endTime of the first item in progressItems
-                        setProgressItems(prevState => [{...prevState[0], startTime: time, endTime: `${nextHour.toString().padStart(2, '0')}:00`}, ...prevState.slice(1)]);
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching attendance data:', error);
-            }
-        };
-    
-        fetchData();
-    }, []);
-
-
-    const addProgressIn = () => {
-        const lastItem = progressItems[progressItems.length - 1];
-        const startTime = lastItem.endTime;
-        const endTime = incrementTimeByMinutes(startTime, 60);
-        const newItem = { id: Date.now(), startTime, endTime, title: "", description: "" };
-        setProgressItems([...progressItems, newItem]);
-    };
-
-    const incrementTimeByMinutes = (time: string, minutes: number) => {
-        const [hoursStr, minutesStr] = time.split(':');
-        let hours = parseInt(hoursStr);
-        let newMinutes = parseInt(minutesStr) + minutes;
-
-        if (newMinutes >= 60) {
-            hours += Math.floor(newMinutes / 60);
-            newMinutes %= 60;
+        if (!dataFetched) {
+            fetchData();
+            setDataFetched(true);
         }
+    }, [dataFetched]);
+    const fetchData = async () => {
+        try {
+            const currentDate = new Date();
+            let estdate;
+            if (currentDate.getTimezoneOffset() !== -300) {
+                estdate = new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+            } else {
+                estdate = currentDate.toISOString().split('T')[0];
+            }
+            const date = currentDate?.toISOString().split('T')[0];
+            const response = await axios.get(APIS.getClockInTimeByUserIdAndDate, { params: { userId, date } });
+            if (response) {
+                const time = response.data;
+                const [hours, minutes] = time.split(':').map(Number);
 
-        return `${hours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
+                const currentHours = currentDate.getHours();
+                const currentMinutes = currentDate.getMinutes();
+                let hourIterate = hours + 1;
+                let nextHour = 0;
+                let nextMinutes = 0;
+                let startTime;
+                let endTime;
+                let prevMinute;
+                const newProgressItems = [];
+                startTime = hours + ":" + minutes;
+                endTime = hourIterate + ":" + nextMinutes;
+
+                for (hourIterate; hourIterate <= currentHours + 1; hourIterate++) {
+                    nextHour = hourIterate;
+                    const prevHour = nextHour - 1;
+                    console.log("current time", currentHours + ":" + currentMinutes);
+                    if (nextHour === hours + 1) {
+                        prevMinute = minutes;
+                    } else {
+                        prevMinute = 0;
+                    }
+                    if (prevHour === currentHours) {
+                        nextMinutes = currentMinutes;
+                        nextHour = currentHours;
+                    }
+                    startTime = prevHour + ":" + prevMinute;
+                    endTime = nextHour + ":" + nextMinutes;
+                    const newItem = { id: Date.now() + hourIterate, startTime, endTime, title: "", description: "" };
+                    newProgressItems.push(newItem);
+                    console.log("Slot Hour", prevHour, "-", nextHour);
+                    console.log("Slot Minutes", prevMinute, "-", nextMinutes);
+                }
+                setProgressItems(newProgressItems); // Set the state with the new items
+            }
+        } catch (error) {
+            console.error('Error fetching attendance data:', error);
+        }
     };
+
+
+
+
+    // const fetchData = async () => {
+    //     try {
+    //         const currentDate = new Date();
+    //         let estdate
+    //         if (currentDate.getTimezoneOffset() !== -300) {
+    //             estdate = new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    //         } else {
+    //             estdate = currentDate.toISOString().split('T')[0];
+    //         }
+    //         const date = currentDate?.toISOString().split('T')[0];
+    //         const response = await axios.get(APIS.getClockInTimeByUserIdAndDate, { params: { userId, date } });
+    //         if (response) {
+    //             const time = response.data;
+    //             const [hours, minutes] = time.split(':').map(Number);
+    //             const currentHours = currentDate.getHours();
+    //             const currentMinutes = currentDate.getMinutes();
+    //             let hourIterate = hours + 1;
+    //             let nextHour = 0;
+    //             let nextMinutes = 0;
+    //             let startTime;
+    //             let endTime
+    //             let prevMinute
+    //             for (hourIterate; hourIterate <= currentHours + 1; hourIterate++) {
+    //                 nextHour = hourIterate
+    //                 const prevHour = nextHour - 1;
+    //                 console.log("current time", currentHours + ":" + currentMinutes);
+    //                 if (nextHour == hours + 1) {
+    //                     prevMinute = minutes;
+    //                 } else {
+    //                     prevMinute = 0;
+    //                 }
+    //                 if (prevHour == currentHours) {
+    //                     nextMinutes = currentMinutes;
+    //                     nextHour = currentHours;
+    //                 }
+    //                 startTime = prevHour + ":" + prevMinute
+    //                 endTime = nextHour + ":" + nextMinutes
+    //                 await addProgressIn(startTime, endTime)
+
+    //                 console.log("Slot Hour", prevHour, "-", nextHour);
+    //                 console.log("Slot Minutes", prevMinute, "-", nextMinutes);
+    //             }
+
+
+    //         }
+
+    //     } catch (error) {
+    //         console.error('Error fetching attendance data:', error);
+    //     }
+    // };
+
+    // const addProgressIn = (start_time: any, end_time: any) => {
+    //     const startTime = start_time;
+    //     const endTime = end_time;
+    //     const newItem = { id: Date.now(), startTime, endTime, title: "", description: "" };
+    //     setProgressItems([...progressItems, newItem]);
+    // };
+
 
     const handleClose = async () => {
         onClose();
@@ -90,19 +153,13 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
     const submitProgress = async () => {
         try {
             const currentDate = new Date();
-            if (currentDate.getTimezoneOffset() !== -300) {
-                const estdate = new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-                const date = estdate.toISOString().split('T')[0];
-                const response = await axios.post(APIS.addDailyProgress, [progressItems, userId, date]);
-                const userData = response.data;
-                return userData;
-            }
-            else {
-                const date = currentDate.toISOString().split('T')[0];
-                const response = await axios.post(APIS.addDailyProgress, [progressItems, userId, date]);
-                const userData = response.data;
-                return userData;
-            }
+            const date = currentDate.getTimezoneOffset() !== -300
+                ? new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' })).toISOString().split('T')[0]
+                : currentDate.toISOString().split('T')[0];
+
+            const response = await axios.post(APIS.addDailyProgress, [progressItems, userId, date]);
+            const userData = response.data;
+            return userData;
         } catch (error) {
             throw error;
         }
@@ -117,7 +174,6 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t bg-black">
                             <h3 className="text-2xl font-semibold text-white ">Enter Daily Progress</h3>
                             <div className="flex gap-3">
-                                <PrimaryButton onClick={addProgressIn}>Add progress</PrimaryButton>
                                 <PrimaryButton onClick={submitProgress}>Submit Progress</PrimaryButton>
                             </div>
                         </div>
@@ -153,7 +209,6 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
                                     </div>
                                 </div>
                             ))}
-
                         </div>
                         <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b bg-black">
                             <button

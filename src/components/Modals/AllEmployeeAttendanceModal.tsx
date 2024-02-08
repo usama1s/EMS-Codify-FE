@@ -2,7 +2,7 @@
 import React from "react";
 import { AllEmployeeAttendanceModalProps } from "../../common/interfaces";
 
-const AllEmployeeAttendanceModal: React.FC<AllEmployeeAttendanceModalProps> = ({ onClose, date, clockin, clockout, clockInPicture, clockOutPicture, last_name, first_name, clockInLocation, clockOutLocation }) => {
+const AllEmployeeAttendanceModal: React.FC<AllEmployeeAttendanceModalProps> = ({ onClose, date, clockin, clockout, clockInPicture, clockOutPicture, last_name, first_name, clockInLocation, clockOutLocation, progress }) => {
 
     const handleClose = async () => {
         onClose()
@@ -25,7 +25,7 @@ const AllEmployeeAttendanceModal: React.FC<AllEmployeeAttendanceModalProps> = ({
     return (
         <>
             <div className="rounded-md justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none ">
-                <div className=" relative w-1/4 h-96 ">
+                <div className=" relative w-2/4 h-96 ">
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none ">
 
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t bg-black">
@@ -56,7 +56,9 @@ const AllEmployeeAttendanceModal: React.FC<AllEmployeeAttendanceModalProps> = ({
                                 </div>
                                 <div className="mt-3 flex justify-between">
                                     <p className="ml-5 text-sm text-black dark:text-white"> Clock in image:</p>
-                                    <img src={decodeBase64Image(clockInPicture)} alt="Attendance" className="w-12 h-12 object-cover rounded-full" />
+                                    {clockInPicture ?
+                                        <img src={decodeBase64Image(clockInPicture)} alt="Attendance" className="w-12 h-12 object-cover rounded-full" /> : null
+                                    }
                                 </div>
                             </div>
                             <div className="mt-5  items-center justify-between">
@@ -72,9 +74,44 @@ const AllEmployeeAttendanceModal: React.FC<AllEmployeeAttendanceModalProps> = ({
                                 </div>
                                 <div className="mt-3 flex justify-between">
                                     <p className="ml-5 text-sm text-black dark:text-white"> Clock out image:</p>
-                                    <img src={decodeBase64Image(clockOutPicture)} alt="Attendance" className="w-12 h-12 object-cover rounded-full" />
+                                    {clockOutPicture ?
+                                        <img src={decodeBase64Image(clockOutPicture)} alt="Attendance" className="w-12 h-12 object-cover rounded-full" /> : null
+                                    }
                                 </div>
                             </div>
+
+                            <div className="mt-5 mb-8">
+                                <h2 className="font-extrabold">Progress</h2>
+                                <div className="ml-6 mt-2 flex justify-between text-white font-medium">
+                                    <div className="col-span-1 hidden items-center sm:flex">
+                                        <p>Hours</p>
+                                    </div>
+                                    <div className="col-span-1 flex items-center">
+                                        <p>Title</p>
+                                    </div>
+                                    <div className="col-span-1 flex items-center">
+                                        <p>Description</p>
+                                    </div>
+                                </div>
+                                <div className="ml-6 mt-2">
+                                    {progress && progress.map((single_progress, index) => (
+                                        <div key={index} className="mt-3 flex justify-between text-white">
+                                            <div className="col-span-1 hidden items-center sm:flex">
+                                                <p>{single_progress.start_time} - {single_progress.end_time}</p>
+                                            </div>
+                                            <div className="col-span-1 flex ">
+                                                <p>{single_progress.title}</p>
+                                            </div>
+                                            <div className="col-span-1 flex ">
+                                                <p>{single_progress.description}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+
+
                         </div>
                         <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b bg-black">
                             <button

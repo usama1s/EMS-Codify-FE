@@ -104,7 +104,7 @@ const EmployeeAttendanceTable: React.FC<TableTwoProps> = ({ data }) => {
                     clockInLocation={data[currentIndex].attendance[currentdataIndex].ClockIn[0]?.location}
                     clockOutPicture={data[currentIndex].attendance[currentdataIndex].ClockOut[0]?.attendance_picture}
                     clockOutLocation={data[currentIndex].attendance[currentdataIndex].ClockOut[0]?.location}
-                />
+                     progress={data[currentIndex].attendance[currentdataIndex].Progress}                />
             ) : null}
             {showRegisterModal ? (
                 <RegisterEmployeeModal onClose={closeRegisterModal} />

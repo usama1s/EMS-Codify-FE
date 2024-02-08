@@ -44,6 +44,14 @@ export interface Attendance {
     date: String;
     ClockIn: ClockEntry[];
     ClockOut: ClockEntry[];
+    Progress: ProgressEntry[];
+}
+
+export interface ProgressEntry {
+    start_time: any;
+    end_time: string;
+    title: string;
+    description: string;
 }
 
 export interface ClockEntry {
@@ -128,6 +136,7 @@ export interface AllEmployeeAttendanceModalProps {
     clockOutPicture: any,
     clockInLocation: string,
     clockOutLocation: string,
+    progress: ProgressEntry[],
 }
 
 export interface ManagersModalProps {
