@@ -18,10 +18,12 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
             setDataFetched(true);
         }
     }, [dataFetched]);
+
+
     const fetchData = async () => {
         try {
+            let estdate: any;
             const currentDate = new Date();
-            let estdate;
             if (currentDate.getTimezoneOffset() !== -300) {
                 estdate = new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
             } else {
@@ -32,7 +34,6 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
             if (response) {
                 const time = response.data;
                 const [hours, minutes] = time.split(':').map(Number);
-
                 const currentHours = currentDate.getHours();
                 const currentMinutes = currentDate.getMinutes();
                 let hourIterate = hours + 1;
@@ -60,6 +61,7 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
                     }
                     startTime = prevHour + ":" + prevMinute;
                     endTime = nextHour + ":" + nextMinutes;
+                    const checkProgress = await checkIfProgressExists(startTime, date)
                     const newItem = { id: Date.now() + hourIterate, startTime, endTime, title: "", description: "" };
                     newProgressItems.push(newItem);
                     console.log("Slot Hour", prevHour, "-", nextHour);
@@ -72,67 +74,10 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
         }
     };
 
-
-
-
-    // const fetchData = async () => {
-    //     try {
-    //         const currentDate = new Date();
-    //         let estdate
-    //         if (currentDate.getTimezoneOffset() !== -300) {
-    //             estdate = new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-    //         } else {
-    //             estdate = currentDate.toISOString().split('T')[0];
-    //         }
-    //         const date = currentDate?.toISOString().split('T')[0];
-    //         const response = await axios.get(APIS.getClockInTimeByUserIdAndDate, { params: { userId, date } });
-    //         if (response) {
-    //             const time = response.data;
-    //             const [hours, minutes] = time.split(':').map(Number);
-    //             const currentHours = currentDate.getHours();
-    //             const currentMinutes = currentDate.getMinutes();
-    //             let hourIterate = hours + 1;
-    //             let nextHour = 0;
-    //             let nextMinutes = 0;
-    //             let startTime;
-    //             let endTime
-    //             let prevMinute
-    //             for (hourIterate; hourIterate <= currentHours + 1; hourIterate++) {
-    //                 nextHour = hourIterate
-    //                 const prevHour = nextHour - 1;
-    //                 console.log("current time", currentHours + ":" + currentMinutes);
-    //                 if (nextHour == hours + 1) {
-    //                     prevMinute = minutes;
-    //                 } else {
-    //                     prevMinute = 0;
-    //                 }
-    //                 if (prevHour == currentHours) {
-    //                     nextMinutes = currentMinutes;
-    //                     nextHour = currentHours;
-    //                 }
-    //                 startTime = prevHour + ":" + prevMinute
-    //                 endTime = nextHour + ":" + nextMinutes
-    //                 await addProgressIn(startTime, endTime)
-
-    //                 console.log("Slot Hour", prevHour, "-", nextHour);
-    //                 console.log("Slot Minutes", prevMinute, "-", nextMinutes);
-    //             }
-
-
-    //         }
-
-    //     } catch (error) {
-    //         console.error('Error fetching attendance data:', error);
-    //     }
-    // };
-
-    // const addProgressIn = (start_time: any, end_time: any) => {
-    //     const startTime = start_time;
-    //     const endTime = end_time;
-    //     const newItem = { id: Date.now(), startTime, endTime, title: "", description: "" };
-    //     setProgressItems([...progressItems, newItem]);
-    // };
-
+    const checkIfProgressExists = async (startTime: string, date: string) => {
+        const response = await axios.post(APIS.checkProgress, [userId, date, startTime]);
+        console.log(response);
+    }
 
     const handleClose = async () => {
         onClose();
@@ -150,20 +95,22 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
         setProgressItems(updatedProgressItems);
     };
 
-    const submitProgress = async () => {
+    const submitProgress = async (index: number) => {
         try {
             const currentDate = new Date();
-            const date = currentDate.getTimezoneOffset() !== -300
-                ? new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' })).toISOString().split('T')[0]
-                : currentDate.toISOString().split('T')[0];
-
-            const response = await axios.post(APIS.addDailyProgress, [progressItems, userId, date]);
+            const date =
+                currentDate.getTimezoneOffset() !== -300
+                    ? new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' })).toISOString().split('T')[0]
+                    : currentDate.toISOString().split('T')[0];
+            const specificItem = progressItems[index];
+            const response = await axios.post(APIS.addDailyProgress, [specificItem, userId, date]);
             const userData = response.data;
             return userData;
         } catch (error) {
             throw error;
         }
     };
+
 
     return (
         <>
@@ -173,14 +120,14 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
 
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t bg-black">
                             <h3 className="text-2xl font-semibold text-white ">Enter Daily Progress</h3>
-                            <div className="flex gap-3">
+                            {/* <div className="flex gap-3">
                                 <PrimaryButton onClick={submitProgress}>Submit Progress</PrimaryButton>
-                            </div>
+                            </div> */}
                         </div>
 
                         <div className="relative p-6 bg-black">
                             {progressItems.map((item, index) => (
-                                <div className="flex justify-between" key={item.id}>
+                                <div className="flex justify-between">
                                     <div>
                                         <p className="font-extrabold">Hours:</p>
                                         <input
@@ -206,6 +153,9 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
                                             value={item.description}
                                             onChange={(e) => handleDescriptionChange(index, e.target.value)}
                                         />
+                                    </div>
+                                    <div className="mt-10">
+                                        <PrimaryButton onClick={() => submitProgress(index)}>Submit Progress</PrimaryButton>
                                     </div>
                                 </div>
                             ))}

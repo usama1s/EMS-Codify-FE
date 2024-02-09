@@ -20,5 +20,6 @@ export const APIS = {
     getCLockInStatusByUserIdAndDate: `${BaseURL}shared/get-clockin-status/:userId/:date`,
     addDailyProgress: `${BaseURL}shared/add-daily-progress`,
     getClockInTimeByUserIdAndDate: `${BaseURL}shared/get-clockin-time/:userId/:date`,
+    checkProgress: `${BaseURL}shared/check-progress/:userId/:date/:startTime`,
 };
 
