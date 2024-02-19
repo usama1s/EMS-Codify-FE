@@ -92,12 +92,6 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
                 <div className="col-span-2 flex items-center">
                     <p className="font-medium">Name</p>
                 </div>
-                {/* <div className="col-span-1 hidden items-center sm:flex">
-                    <p className="font-medium">Designation</p>
-                </div> */}
-                {/* <div className="col-span-1 flex items-center">
-                    <p className="font-medium">Email</p>
-                </div> */}
                 <div className="col-span-2 flex items-center">
                     <p className="font-medium">Date</p>
                 </div>
@@ -107,9 +101,6 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
                 <div className="col-span-2 flex items-center">
                     <p className="font-medium">Clock Out</p>
                 </div>
-                {/* <div className="col-span-1 flex items-center">
-                    <p className="font-medium">Attendance Detail</p>
-                </div> */}
             </div>
             {data.map((attendance, index) => (
                 attendance.attendance.map((attendanceData) => (
@@ -117,12 +108,6 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
                         <div className="col-span-2 flex items-center">
                             <p className="text-sm text-black dark:text-white">{attendance.first_name} {attendance.last_name}</p>
                         </div>
-                        {/* <div className="col-span-1 hidden items-center sm:flex">
-                            <p className="text-sm text-black dark:text-white">{attendance.designation}</p>
-                        </div> */}
-                        {/* <div className="col-span-1 flex items-center">
-                            <p className="text-sm text-black dark:text-white">{attendance.email}</p>
-                        </div> */}
                         <div className="col-span-2 flex items-center">
                             <p className="text-sm text-black dark:text-white">{attendanceData.date}</p>
                         </div>
