@@ -22,7 +22,7 @@ const MarkAttendance: React.FC = () => {
                 if (response && response.data) {
                     setAllAttendances(response.data);
                 }
-                console.log(AllAttendances)
+                // console.log(AllAttendances)
 
             } catch (error) {
                 console.error('Error fetching attendance data:', error);

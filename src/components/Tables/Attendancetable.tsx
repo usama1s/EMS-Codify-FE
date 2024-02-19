@@ -18,25 +18,25 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
     const userId: number | null = userData ? userData.user_id : null;
 
     // const [showRegisterModal, setShowRegisterModal] = useState(false)
-    const [currentIndex, setCurrentIndex] = useState(null);
-    const [currentdataIndex, setCurrentdataIndex] = useState(null);
+    // const [currentIndex, setCurrentIndex] = useState(null);
+    // const [currentdataIndex, setCurrentdataIndex] = useState(null);
 
-    const openAttendanceModal = () => {
-        setshowAttendance(true)
+    const openAttendanceModal = async () => {
+        await setshowAttendance(true)
     }
     const openProgressModal = async () => {
-        // const clockInStatus = await checkClockStatusToAddProgress();
-        // if (clockInStatus == "Not clocked in") {
-        //     alert("First clock in to add progress")
-        // }
-        // else if (clockInStatus == "CI") {
-        //     setshowProgressModal(true)
-        // }
-        // else if (clockInStatus == "CO") {
-        //     alert("First clock in to add progress")
-        // }
-        setshowProgressModal(true)
-        
+        const clockInStatus = await checkClockStatusToAddProgress();
+        if (clockInStatus == "Not clocked in") {
+            alert("First clock in to add progress")
+        }
+        else if (clockInStatus == "CI") {
+            setshowProgressModal(true)
+        }
+        else if (clockInStatus == "CO") {
+            alert("First clock in to add progress")
+        }
+        // setshowProgressModal(true)
+
     }
     const checkClockStatusToAddProgress = async () => {
         try {
@@ -112,7 +112,7 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
                 </div> */}
             </div>
             {data.map((attendance, index) => (
-                attendance.attendance.map((attendanceData, dataIndex) => (
+                attendance.attendance.map((attendanceData) => (
                     <div key={index} className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
                         <div className="col-span-2 flex items-center">
                             <p className="text-sm text-black dark:text-white">{attendance.first_name} {attendance.last_name}</p>

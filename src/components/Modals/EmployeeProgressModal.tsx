@@ -61,9 +61,11 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
                     }
                     startTime = prevHour + ":" + prevMinute;
                     endTime = nextHour + ":" + nextMinutes;
-                    const checkProgress = await checkIfProgressExists(startTime, date)
-                    const newItem = { id: Date.now() + hourIterate, startTime, endTime, title: "", description: "" };
-                    newProgressItems.push(newItem);
+                    const checkProgress: boolean = await checkIfProgressExists(startTime, endTime, date)
+                    if (checkProgress == false) {
+                        const newItem = { id: Date.now() + hourIterate, startTime, endTime, title: "", description: "" };
+                        newProgressItems.push(newItem);
+                    }
                     console.log("Slot Hour", prevHour, "-", nextHour);
                     console.log("Slot Minutes", prevMinute, "-", nextMinutes);
                 }
@@ -74,9 +76,16 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
         }
     };
 
-    const checkIfProgressExists = async (startTime: string, date: string) => {
-        const response = await axios.post(APIS.checkProgress, [userId, date, startTime]);
-        console.log(response);
+    const checkIfProgressExists = async (startTime: string, endTime: string, date: string) => {
+        const data = {
+            userId: userId,
+            date: date,
+            startTime: startTime,
+            endTime: endTime
+        };
+        const response = await axios.post(APIS.checkProgress, data);
+        return (response.data)
+        // console.log(response.ret);
     }
 
     const handleClose = async () => {
@@ -120,12 +129,44 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
 
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t bg-black">
                             <h3 className="text-2xl font-semibold text-white ">Enter Daily Progress</h3>
-                            {/* <div className="flex gap-3">
-                                <PrimaryButton onClick={submitProgress}>Submit Progress</PrimaryButton>
-                            </div> */}
+                        </div>
+                        <div className="relative p-6 bg-black">
+                            {progressItems.map((item, index) => (
+                                <div key={index} className="flex justify-between">
+                                    <div>
+                                        <p className="font-extrabold">Hours:</p>
+                                        <input
+                                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                            type="text"
+                                            value={`${item.startTime} to ${item.endTime}`}
+                                            readOnly
+                                        />
+                                    </div>
+                                    <div>
+                                        <p className="font-extrabold ">Title:</p>
+                                        <input
+                                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark.bg-form-input dark:focus:border-primary"
+                                            type="text"
+                                            value={item.title}
+                                            onChange={(e) => handleTitleChange(index, e.target.value)}
+                                        />
+                                    </div>
+                                    <div>
+                                        <p className="font-extrabold ">Description:</p>
+                                        <textarea
+                                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark.bg-form-input dark:focus:border-primary"
+                                            value={item.description}
+                                            onChange={(e) => handleDescriptionChange(index, e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="mt-10">
+                                        <PrimaryButton onClick={() => submitProgress(index)}>Submit Progress</PrimaryButton>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
 
-                        <div className="relative p-6 bg-black">
+                        {/* <div className="relative p-6 bg-black">
                             {progressItems.map((item, index) => (
                                 <div className="flex justify-between">
                                     <div>
@@ -159,7 +200,7 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
                                     </div>
                                 </div>
                             ))}
-                        </div>
+                        </div> */}
                         <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b bg-black">
                             <button
                                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
