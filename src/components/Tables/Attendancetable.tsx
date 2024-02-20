@@ -12,15 +12,6 @@ import './filter-all.css';
 
 const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
 
-    const customStyles = {
-        border: '1px solid #ccc',
-        borderRadius: '5px',
-        padding: '5px',
-        backgroundColor: 'red',
-    };
-
- 
-    
     const [showAttendanceModal, setshowAttendance] = useState(false)
     const [showProgressModal, setshowProgressModal] = useState(false)
 
@@ -116,23 +107,27 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
                 <h4 className="text-xl font-semibold text-black dark:text-white">
                     Attendance List
                 </h4>
-                <div className="filters-all [&_*]:bg-red-500 [&>*]:bg-white">
-                    <DropdownDate
-                        onMonthChange={(month: any) => { console.log(month); }}
-                        onDayChange={(day: any) => { console.log(day); }}
-                        onYearChange={(year: any) => { console.log(year); }}
-                        onDateChange={(date: string | number | Date) => { console.log(date); }}
-                        defaultValues={{
-                            year: "select year",
-                            month: "select month",
-                            day: "select day"
-                        }}
-                    />
-                </div>
 
-                <div className='flex gap-3'>
+
+                <div className=''>
+                    <div className='flex gap-3 mb-5'>
                     <PrimaryButton onClick={openProgressModal}>Mark Daily Progress</PrimaryButton>
                     <PrimaryButton onClick={openAttendanceModal}>Mark Attendence</PrimaryButton>
+                    </div>
+                    {/* [&>*]:bg-white */}
+                    <div className="filters-all">
+                        <DropdownDate
+                            onMonthChange={(month: any) => { console.log(month); }}
+                            onDayChange={(day: any) => { console.log(day); }}
+                            onYearChange={(year: any) => { console.log(year); }}
+                            // onDateChange={(date: string | number | Date) => { console.log(date); }}
+                            defaultValues={{
+                                year: "select year",
+                                month: "select month",
+                                day: "select day"
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
 
