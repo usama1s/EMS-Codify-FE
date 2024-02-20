@@ -8,4 +8,6 @@
     border-radius: 5px;
 }
 .filters-all>div>div{
+    background-color: green;
+    padding: 5px;
 }
