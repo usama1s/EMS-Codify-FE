@@ -1,0 +1,11 @@
+.filters-all>div{
+    display: flex;
+    gap: 5px
+}
+.filters-all>div>div select{
+    height: 40px;
+    background-color: white;
+    border-radius: 5px;
+}
+.filters-all>div>div{
+}

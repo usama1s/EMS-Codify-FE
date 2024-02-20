@@ -41,6 +41,7 @@ export interface EmployeeInterface {
 }
 
 export interface Attendance {
+    attendance_id: number;
     date: String;
     ClockIn: ClockEntry[];
     ClockOut: ClockEntry[];
@@ -127,6 +128,7 @@ export interface DashboardModalProps {
 
 export interface AllEmployeeAttendanceModalProps {
     onClose: () => void;
+    attendanceId: number;
     first_name: string;
     last_name: string;
     date: any;
@@ -136,7 +138,6 @@ export interface AllEmployeeAttendanceModalProps {
     clockOutPicture: any,
     clockInLocation: string,
     clockOutLocation: string,
-    progress: ProgressEntry[],
 }
 
 export interface ManagersModalProps {

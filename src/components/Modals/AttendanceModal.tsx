@@ -177,21 +177,17 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
     function handleCloseModal(): void {
         setShowModal(false)
     }
-
-
-
     const handleClose = async () => {
         onClose()
-
     };
 
     return (
         <>
             <div className="rounded-md justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none ">
-                <div className=" relative w-1/2 h-2/4 ">
+                <div className=" relative w-1/2 h-2/4">
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-black outline-none focus:outline-none ">
 
-                        <div className="relative z-20 h-700 md:h-700 flex flex-col items-center justify-center mt-7">
+                        <div className="relative z-20 h-700 md:h-700 flex flex-col items-center justify-center mt-8">
                             <Webcam
                                 audio={false}
                                 height={700}
@@ -215,6 +211,15 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
                             {showModal ? (
                                 <ClockOutWarningModal isOpen={showModal} hours={hours} clockOutData={clockOutData} onClose={handleCloseModal} />
                             ) : null}
+                        </div>
+
+                        <div className=" p-10 bg-black">
+                            <h2 className="font-extrabold">Instructions</h2>
+                            <ul className="pl-5">
+                                <li>Clock in before doing any office related work</li>
+                                <li>Progress can only be submitted when the employee is clocked in.</li>
+                                <li>If the employee has clocked out he/she wont be able to clock in within 24 hours.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>

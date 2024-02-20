@@ -1,8 +1,28 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AllEmployeeAttendanceModalProps } from "../../common/interfaces";
+import { APIS } from "../../apis";
+import axios from "axios";
 
-const AllEmployeeAttendanceModal: React.FC<AllEmployeeAttendanceModalProps> = ({ onClose, date, clockin, clockout, clockInPicture, clockOutPicture, last_name, first_name, clockInLocation, clockOutLocation, progress }) => {
+const AllEmployeeAttendanceModal: React.FC<AllEmployeeAttendanceModalProps> = (
+    { onClose, attendanceId, date, clockin, clockout, clockInPicture, clockOutPicture, last_name, first_name, clockInLocation, clockOutLocation }) => {
+    const [progress, setProgress] = useState<any>()
+
+    useEffect(() => {
+        fetchProgressDetails();
+    }, []);
+
+    const fetchProgressDetails = async () => {
+        try {
+            const response = await axios.get(APIS.getProgressDetails, { params: { attendanceId, date } });
+            if (response && response.data) {
+                setProgress(response.data.progress);
+            }
+
+        } catch (error) {
+            console.error('Error fetching attendance data:', error);
+        }
+    };
 
     const handleClose = async () => {
         onClose()
@@ -94,19 +114,27 @@ const AllEmployeeAttendanceModal: React.FC<AllEmployeeAttendanceModalProps> = ({
                                     </div>
                                 </div>
                                 <div className="ml-6 mt-2">
-                                    {progress && progress.map((single_progress, index) => (
-                                        <div key={index} className="mt-3 flex justify-between text-white">
-                                            <div className="col-span-1 hidden items-center sm:flex">
-                                                <p>{single_progress.start_time} - {single_progress.end_time}</p>
-                                            </div>
-                                            <div className="col-span-1 flex ">
-                                                <p>{single_progress.title}</p>
-                                            </div>
-                                            <div className="col-span-1 flex ">
-                                                <p>{single_progress.description}</p>
-                                            </div>
-                                        </div>
-                                    ))}
+
+                                    {progress ? (
+                                        <>
+                                            {progress.map((single_progress: any, index: number) => (
+                                                <div className="mt-3 flex justify-between text-white" key={index}>
+                                                    <div className="col-span-1 hidden items-center sm:flex">
+                                                        <p>{single_progress.start_time} - {single_progress.end_time}</p>
+                                                    </div>
+                                                    <div className="col-span-1 flex">
+                                                        <p>{single_progress.title}</p>
+                                                    </div>
+                                                    <div className="col-span-1 flex">
+                                                        <p>{single_progress.description}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <p>No progress Available</p>
+                                    )}
+
                                 </div>
                             </div>
 

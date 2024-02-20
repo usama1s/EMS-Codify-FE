@@ -66,8 +66,8 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
                         const newItem = { id: Date.now() + hourIterate, startTime, endTime, title: "", description: "" };
                         newProgressItems.push(newItem);
                     }
-                    console.log("Slot Hour", prevHour, "-", nextHour);
-                    console.log("Slot Minutes", prevMinute, "-", nextMinutes);
+                    // console.log("Slot Hour", prevHour, "-", nextHour);
+                    // console.log("Slot Minutes", prevMinute, "-", nextMinutes);
                 }
                 setProgressItems(newProgressItems); // Set the state with the new items
             }
@@ -123,12 +123,19 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
 
     return (
         <>
-            <div className="rounded-md justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none ">
+            <div className="rounded-md justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none  ">
                 <div className=" relative w-2/3 h-96 ">
-                    <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none ">
-
+                    <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t bg-black">
                             <h3 className="text-2xl font-semibold text-white ">Enter Daily Progress</h3>
+                        </div>
+                        <div className=" p-10 bg-black">
+                            <h2 className="font-extrabold">Instructions</h2>
+                            <ul className="pl-5">
+                                <li>Clock in before doing any office related work</li>
+                                <li>Progress can only be submitted when the employee is clocked in.</li>
+                                <li>If the employee has clocked out he/she wont be able to clock in within 24 hours.</li>
+                            </ul>
                         </div>
                         <div className="relative p-6 bg-black">
                             {progressItems.map((item, index) => (
