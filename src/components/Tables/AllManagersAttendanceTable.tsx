@@ -1,24 +1,49 @@
-import { TableTwoProps } from "../../common/interfaces";
+import { AttendanceData } from "../../common/interfaces";
 
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DashboardModal from "../Modals/DashboardModal";
 import RegisterModal from "../Modals/RegisterModal";
 import { DropdownDate } from "react-dropdown-date";
+import './filter-all.css';
+import axios from "axios";
+import { APIS } from "../../apis";
 
-
-
-const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
+const AllManagersAttendanceTable = () => {
 
   const [showModal, setShowModal] = useState(false)
   const [showRegisterModal, setShowRegisterModal] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(null);
   const [currentdataIndex, setCurrentdataIndex] = useState(null);
+  const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
+  const [month, setmonth] = useState<any>();
+  let [year, setyear] = useState<any>("Select Year");
+  const [monthstring, setmonthstring] = useState<any>("Select Month");
 
-  
-  const [selectedYear, setSelectedYear] = useState("2024");
-  const [selectedMonth, setSelectedMonth] = useState("February");
-  const [selectedDay, setSelectedDay] = useState("20");
+  useEffect(() => {
+    if (typeof year === 'string') year = null;
+    fetchData(year, month);
+  }, [year, month]);
 
+  const fetchData = async (year: number, month: number) => {
+    try {
+      const response = await axios.get(APIS.getAllManagersAttendence, { params: { year, month } });
+      if (response && response.data) {
+        setAttendanceData(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching attendance data:', error);
+    }
+  };
+
+  const handleYearChange = (year: any) => {
+    setyear(year);
+  };
+
+  const handleMonthChange = (month: any) => {
+    const monthNumber = mapMonthToNumber(month);
+    setmonthstring(month)
+    setmonth(monthNumber.toString());
+  };
 
   const viewModal = (index: any, dataIndex: any) => {
     setCurrentIndex(index);
@@ -29,9 +54,42 @@ const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
   const handleClose = () => {
     setShowModal(false)
   }
+
   const closeRegisterModal = () => {
     setShowRegisterModal(false)
   }
+
+  const mapMonthToNumber = (monthName: any) => {
+    // You can implement your own logic here to map month names to numbers
+    switch (monthName) {
+      case 'January':
+        return 1;
+      case 'February':
+        return 2;
+      case 'March':
+        return 3;
+      case 'April':
+        return 4;
+      case 'May':
+        return 5;
+      case 'June':
+        return 6;
+      case 'July':
+        return 7;
+      case 'August':
+        return 8;
+      case 'September':
+        return 9;
+      case 'October':
+        return 10;
+      case 'November':
+        return 11;
+      case 'December':
+        return 12;
+      default:
+        return 1; // Default to January if month name is not recognized
+    }
+  };
 
 
 
@@ -41,17 +99,16 @@ const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
         <h4 className="text-xl font-semibold text-black dark:text-white">
           All Managers Attendence
         </h4>
-        <DropdownDate
-          onMonthChange={(month: any) => { console.log(month); }}
-          onDayChange={(day: any) => { console.log(day); }}
-          onYearChange={(year: any) => { console.log(year); }}
-          onDateChange={(date: string | number | Date) => { console.log(date); }}
-          defaultValues={{
-            year: selectedYear,
-            month: selectedMonth,
-            day: selectedDay
-          }}
-        />
+        <div className="filters-all">
+          <DropdownDate
+            onMonthChange={handleMonthChange}
+            onYearChange={handleYearChange}
+            defaultValues={{
+              year: year,
+              month: monthstring,
+            }}
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
@@ -79,7 +136,7 @@ const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
       </div>
 
 
-      {data.map((attendance, index) => (
+      {attendanceData.map((attendance, index) => (
         attendance.attendance.map((attendanceData, dataIndex) => (
           <div key={index + dataIndex} className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
             <div className="col-span-1 flex items-center">
@@ -115,11 +172,11 @@ const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
       {showModal && currentIndex !== null && currentdataIndex !== null ? (
         <DashboardModal
           onClose={handleClose}
-          date={data[currentIndex].attendance[currentdataIndex].date}
-          clockin={data[currentIndex].attendance[currentdataIndex].ClockIn[0]?.time}
-          clockout={data[currentIndex].attendance[currentdataIndex].ClockOut[0]?.time}
-          clockInPicture={data[currentIndex].attendance[currentdataIndex].ClockIn[0]?.attendance_picture}
-          clockOutPicture={data[currentIndex].attendance[currentdataIndex].ClockOut[0]?.attendance_picture}
+          date={attendanceData[currentIndex].attendance[currentdataIndex].date}
+          clockin={attendanceData[currentIndex].attendance[currentdataIndex].ClockIn[0]?.time}
+          clockout={attendanceData[currentIndex].attendance[currentdataIndex].ClockOut[0]?.time}
+          clockInPicture={attendanceData[currentIndex].attendance[currentdataIndex].ClockIn[0]?.attendance_picture}
+          clockOutPicture={attendanceData[currentIndex].attendance[currentdataIndex].ClockOut[0]?.attendance_picture}
         />
       ) : null}
       {showRegisterModal ? (
@@ -130,4 +187,4 @@ const TableTwo: React.FC<TableTwoProps> = ({ data }) => {
   );
 };
 
-export default TableTwo;
+export default AllManagersAttendanceTable;

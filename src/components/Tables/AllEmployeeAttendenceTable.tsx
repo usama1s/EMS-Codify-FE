@@ -1,17 +1,85 @@
-import { TableTwoProps } from "../../common/interfaces";
+import { AttendanceData } from "../../common/interfaces";
 
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RegisterEmployeeModal from "../Modals/RegisterEmployeeModal";
 import AllEmployeeAttendanceModal from "../Modals/AllEmployeeAttendanceModal";
+import axios from "axios";
+import { APIS } from "../../apis";
+import { DropdownDate } from "react-dropdown-date";
 
 
 
-const EmployeeAttendanceTable: React.FC<TableTwoProps> = ({ data }) => {
+const EmployeeAttendanceTable = ({ }) => {
 
     const [showModal, setShowModal] = useState(false)
     const [showRegisterModal, setShowRegisterModal] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(null);
     const [currentdataIndex, setCurrentdataIndex] = useState(null);
+    const [data, setAttendanceData] = useState<AttendanceData[]>([]);
+    const [month, setmonth] = useState<any>();
+    let [year, setyear] = useState<any>("Select Year");
+    const [monthstring, setmonthstring] = useState<any>("Select Month");
+
+    useEffect(() => {
+        if (typeof year === 'string') year = null;
+        fetchData(year, month);
+    }, [year, month]);
+
+    const fetchData = async (year: number, month: number) => {
+        try {
+            const response = await axios.get(APIS.getAllEmployeesAttendence, { params: { year, month } });
+            if (response && response.data) {
+                setAttendanceData(response.data);
+            }
+
+        } catch (error) {
+            console.error('Error fetching attendance data:', error);
+        }
+    };
+
+    const handleYearChange = (year: any) => {
+        setyear(year);
+    };
+
+    const handleMonthChange = (month: any) => {
+        const monthNumber = mapMonthToNumber(month);
+        setmonthstring(month)
+        setmonth(monthNumber.toString());
+    };
+
+    const mapMonthToNumber = (monthName: any) => {
+        // You can implement your own logic here to map month names to numbers
+        switch (monthName) {
+            case 'January':
+                return 1;
+            case 'February':
+                return 2;
+            case 'March':
+                return 3;
+            case 'April':
+                return 4;
+            case 'May':
+                return 5;
+            case 'June':
+                return 6;
+            case 'July':
+                return 7;
+            case 'August':
+                return 8;
+            case 'September':
+                return 9;
+            case 'October':
+                return 10;
+            case 'November':
+                return 11;
+            case 'December':
+                return 12;
+            default:
+                return 1; // Default to January if month name is not recognized
+        }
+    };
+
+
 
     const viewModal = (index: any, dataIndex: any) => {
         setCurrentIndex(index);
@@ -34,6 +102,16 @@ const EmployeeAttendanceTable: React.FC<TableTwoProps> = ({ data }) => {
                 <h4 className="text-xl font-semibold text-black dark:text-white">
                     All Employees Attendance List
                 </h4>
+                <div className="filters-all">
+                    <DropdownDate
+                        onMonthChange={handleMonthChange}
+                        onYearChange={handleYearChange}
+                        defaultValues={{
+                            year: year,
+                            month: monthstring,
+                        }}
+                    />
+                </div>
             </div>
 
             <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
@@ -95,6 +173,7 @@ const EmployeeAttendanceTable: React.FC<TableTwoProps> = ({ data }) => {
             {showModal && currentIndex !== null && currentdataIndex !== null ? (
                 <AllEmployeeAttendanceModal
                     onClose={handleClose}
+                    attendanceId={data[currentIndex].attendance[currentdataIndex].attendance_id}
                     first_name={data[currentIndex].first_name}
                     last_name={data[currentIndex].last_name}
                     date={data[currentIndex].attendance[currentdataIndex].date}
@@ -104,7 +183,7 @@ const EmployeeAttendanceTable: React.FC<TableTwoProps> = ({ data }) => {
                     clockInLocation={data[currentIndex].attendance[currentdataIndex].ClockIn[0]?.location}
                     clockOutPicture={data[currentIndex].attendance[currentdataIndex].ClockOut[0]?.attendance_picture}
                     clockOutLocation={data[currentIndex].attendance[currentdataIndex].ClockOut[0]?.location}
-                    progress={data[currentIndex].attendance[currentdataIndex].Progress} />
+                />
             ) : null}
             {showRegisterModal ? (
                 <RegisterEmployeeModal onClose={closeRegisterModal} />

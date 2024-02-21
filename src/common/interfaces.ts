@@ -201,6 +201,11 @@ export interface EmployeeProgressModalInterface {
     onClose: () => void;
 }
 
+export interface MessegeModalProps {
+    displayText: string;
+    onClose: () => void;
+}
+
 
 
 

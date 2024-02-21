@@ -1,13 +1,24 @@
 .filters-all>div{
     display: flex;
-    gap: 5px
+    gap: 30px
 }
 .filters-all>div>div select{
+    border: 1px solid white;
+    padding: 6px;
+    width: 9rem;
     height: 40px;
-    background-color: white;
+    background-color: #24303F;
     border-radius: 5px;
 }
-.filters-all>div>div{
+.filters-all  {
+    color: white;
+}
+
+.filters-all>div> :last-child {
+    display: none;
+}
+
+/* .filters-all>div>div{
     background-color: green;
     padding: 5px;
-}
+} */

@@ -1,38 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Breadcrumb from '../components/Breadcrumb';
-import axios from 'axios';
-import { APIS } from '../apis';
 import AttendenceTable from '../components/Tables/Attendancetable';
-import { AttendanceData, UserData } from '../common/interfaces';
 
 
 
 const MarkAttendance: React.FC = () => {
-    const [AllAttendances, setAllAttendances] = useState<AttendanceData[]>([]);
-
-
-    const userDataString = localStorage.getItem('userData');
-    const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
-    const userId: number | null = userData ? userData.user_id : null;
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(APIS.getAttendanceByUserId, { params: { userId } });
-                if (response && response.data) {
-                    setAllAttendances(response.data);
-                }
-                // console.log(AllAttendances)
-
-            } catch (error) {
-                console.error('Error fetching attendance data:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-
     //     const apiUrl = `https://api.example.com/reverse-geocode?lat=${latitude}&lon=${longitude}`;
 
     //     try {
@@ -53,7 +25,7 @@ const MarkAttendance: React.FC = () => {
             <Breadcrumb pageName="Attendance" />
 
             <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark" style={{ height: '700px' }}>
-                <AttendenceTable data={AllAttendances} />
+                <AttendenceTable />
             </div>
         </>
     );

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AttendanceModal from '../Modals/AttendanceModal';
-import { AttendanceTableProps, UserData } from '../../common/interfaces';
+import { AttendanceData, UserData } from '../../common/interfaces';
 import PrimaryButton from '../UI/PrimaryButton';
 import EmployeeProgressModal from '../Modals/EmployeeProgressModal';
 import axios from 'axios';
@@ -10,7 +10,7 @@ import { DropdownDate } from 'react-dropdown-date';
 import './filter-all.css';
 
 
-const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
+const AttendenceTable = () => {
 
     const [showAttendanceModal, setshowAttendance] = useState(false)
     const [showProgressModal, setshowProgressModal] = useState(false)
@@ -23,6 +23,29 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
     // const [showRegisterModal, setShowRegisterModal] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(null);
     const [currentdataIndex, setCurrentdataIndex] = useState(null);
+    const [AllAttendances, setAllAttendances] = useState<AttendanceData[]>([]);
+    const [month, setmonth] = useState<any>();
+    let [year, setyear] = useState<any>("Select Year");
+    const [monthstring, setmonthstring] = useState<any>("Select Month");
+
+
+    useEffect(() => {
+        if (typeof year === 'string') year = null;
+        fetchData(year, month);
+    }, [year, month]);
+
+    const fetchData = async (year: number, month: number) => {
+        try {
+            const response = await axios.get(APIS.getAttendanceByUserId, { params: { userId, month, year } });
+            if (response && response.data) {
+                setAllAttendances(response.data);
+            }
+            // console.log(AllAttendances)
+
+        } catch (error) {
+            console.error('Error fetching attendance data:', error);
+        }
+    };
 
     const openAttendanceModal = async () => {
         await setshowAttendance(true)
@@ -77,9 +100,18 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
         setshowAttendance(false)
     }
 
-    const handleClose = () => {
-        setShowModal(false)
-    }
+
+
+
+    const handleYearChange = (year: any) => {
+        setyear(year);
+    };
+
+    const handleMonthChange = (month: any) => {
+        const monthNumber = mapMonthToNumber(month);
+        setmonthstring(month)
+        setmonth(monthNumber.toString());
+    };
 
     const viewModal = (index: any, dataIndex: any) => {
         setCurrentIndex(index);
@@ -87,19 +119,42 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
         setShowModal(true)
     }
 
+    const handleClose = () => {
+        setShowModal(false)
+    }
 
-    // const formatDate = (date: string | number | Date) => {
-    //     // formats a JS date to 'yyyy-mm-dd'
-    //     var d = new Date(date),
-    //         month = "" + (d.getMonth() + 1),
-    //         day = "" + d.getDate(),
-    //         year = d.getFullYear();
+    const mapMonthToNumber = (monthName: any) => {
+        // You can implement your own logic here to map month names to numbers
+        switch (monthName) {
+            case 'January':
+                return 1;
+            case 'February':
+                return 2;
+            case 'March':
+                return 3;
+            case 'April':
+                return 4;
+            case 'May':
+                return 5;
+            case 'June':
+                return 6;
+            case 'July':
+                return 7;
+            case 'August':
+                return 8;
+            case 'September':
+                return 9;
+            case 'October':
+                return 10;
+            case 'November':
+                return 11;
+            case 'December':
+                return 12;
+            default:
+                return 1; // Default to January if month name is not recognized
+        }
+    };
 
-    //     if (month.length < 2) month = "0" + month;
-    //     if (day.length < 2) day = "0" + day;
-
-    //     return [year, month, day].join("-");
-    // };
 
     return (
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -110,21 +165,17 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
 
 
                 <div className=''>
-                    <div className='flex gap-3 mb-5'>
-                    <PrimaryButton onClick={openProgressModal}>Mark Daily Progress</PrimaryButton>
-                    <PrimaryButton onClick={openAttendanceModal}>Mark Attendence</PrimaryButton>
+                    <div className='flex gap-8 mb-5'>
+                        <PrimaryButton onClick={openProgressModal}>Mark Daily Progress</PrimaryButton>
+                        <PrimaryButton onClick={openAttendanceModal}>Mark Attendence</PrimaryButton>
                     </div>
-                    {/* [&>*]:bg-white */}
                     <div className="filters-all">
                         <DropdownDate
-                            onMonthChange={(month: any) => { console.log(month); }}
-                            onDayChange={(day: any) => { console.log(day); }}
-                            onYearChange={(year: any) => { console.log(year); }}
-                            // onDateChange={(date: string | number | Date) => { console.log(date); }}
+                            onMonthChange={handleMonthChange}
+                            onYearChange={handleYearChange}
                             defaultValues={{
-                                year: "select year",
-                                month: "select month",
-                                day: "select day"
+                                year: year,
+                                month: monthstring,
                             }}
                         />
                     </div>
@@ -145,7 +196,7 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
                     <p className="font-medium">Clock Out</p>
                 </div>
             </div>
-            {data.map((attendance, index) => (
+            {AllAttendances.map((attendance, index) => (
                 attendance.attendance.map((attendanceData, dataIndex) => (
                     <div key={index} className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
                         <div className="col-span-2 flex items-center">
@@ -175,16 +226,16 @@ const AttendenceTable: React.FC<AttendanceTableProps> = ({ data }) => {
             {showModal && currentIndex !== null && currentdataIndex !== null ? (
                 <AllEmployeeAttendanceModal
                     onClose={handleClose}
-                    attendanceId={data[currentIndex].attendance[currentdataIndex].attendance_id}
-                    first_name={data[currentIndex].first_name}
-                    last_name={data[currentIndex].last_name}
-                    date={data[currentIndex].attendance[currentdataIndex].date}
-                    clockin={data[currentIndex].attendance[currentdataIndex].ClockIn[0]?.time}
-                    clockout={data[currentIndex].attendance[currentdataIndex].ClockOut[0]?.time}
-                    clockInPicture={data[currentIndex].attendance[currentdataIndex].ClockIn[0]?.attendance_picture}
-                    clockInLocation={data[currentIndex].attendance[currentdataIndex].ClockIn[0]?.location}
-                    clockOutPicture={data[currentIndex].attendance[currentdataIndex].ClockOut[0]?.attendance_picture}
-                    clockOutLocation={data[currentIndex].attendance[currentdataIndex].ClockOut[0]?.location}
+                    attendanceId={AllAttendances[currentIndex].attendance[currentdataIndex].attendance_id}
+                    first_name={AllAttendances[currentIndex].first_name}
+                    last_name={AllAttendances[currentIndex].last_name}
+                    date={AllAttendances[currentIndex].attendance[currentdataIndex].date}
+                    clockin={AllAttendances[currentIndex].attendance[currentdataIndex].ClockIn[0]?.time}
+                    clockout={AllAttendances[currentIndex].attendance[currentdataIndex].ClockOut[0]?.time}
+                    clockInPicture={AllAttendances[currentIndex].attendance[currentdataIndex].ClockIn[0]?.attendance_picture}
+                    clockInLocation={AllAttendances[currentIndex].attendance[currentdataIndex].ClockIn[0]?.location}
+                    clockOutPicture={AllAttendances[currentIndex].attendance[currentdataIndex].ClockOut[0]?.attendance_picture}
+                    clockOutLocation={AllAttendances[currentIndex].attendance[currentdataIndex].ClockOut[0]?.location}
                 />
             ) : null}
 
