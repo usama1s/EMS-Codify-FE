@@ -197,6 +197,7 @@ export interface RegisterModalProps {
 export interface PrimaryButtonInterface {
     onClick: () => void;
     children: React.ReactNode;
+    disabled?: boolean;
 }
 
 export interface EmployeeProgressModalInterface {
