@@ -1,5 +1,4 @@
 import { AttendanceData } from "../../common/interfaces";
-
 import { useEffect, useState } from 'react';
 import DashboardModal from "../Modals/DashboardModal";
 import RegisterModal from "../Modals/RegisterModal";
@@ -45,20 +44,6 @@ const AllManagersAttendanceTable = () => {
     setmonth(monthNumber.toString());
   };
 
-  const viewModal = (index: any, dataIndex: any) => {
-    setCurrentIndex(index);
-    setCurrentdataIndex(dataIndex)
-    setShowModal(true)
-  }
-
-  const handleClose = () => {
-    setShowModal(false)
-  }
-
-  const closeRegisterModal = () => {
-    setShowRegisterModal(false)
-  }
-
   const mapMonthToNumber = (monthName: any) => {
     // You can implement your own logic here to map month names to numbers
     switch (monthName) {
@@ -90,6 +75,22 @@ const AllManagersAttendanceTable = () => {
         return 1; // Default to January if month name is not recognized
     }
   };
+
+  const viewModal = (index: any, dataIndex: any) => {
+    setCurrentIndex(index);
+    setCurrentdataIndex(dataIndex)
+    setShowModal(true)
+  }
+
+  const handleClose = () => {
+    setShowModal(false)
+  }
+
+  const closeRegisterModal = () => {
+    setShowRegisterModal(false)
+  }
+
+  
 
 
 

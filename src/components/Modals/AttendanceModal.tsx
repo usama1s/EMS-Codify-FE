@@ -1,5 +1,5 @@
 
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AttendanceModalProps, UserData } from "../../common/interfaces";
 import Webcam from "react-webcam";
 import { attendance } from "../../redux/store/slices/attendanceSlice";
@@ -9,12 +9,26 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { resetTimer, startTimer } from "../../redux/store/slices/timerSlice";
 import ClockOutWarningModal from "./ClockOutWarningModal";
+import PrimaryButton from "../UI/PrimaryButton";
+import DangerButton from "../UI/DangerButton";
+import SecondaryButton from "../UI/SecondaryButton";
+import MessegeModal from "./MessageModal";
 
 const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
+
+    const userDataString = localStorage.getItem('userData');
+    const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
+    const userId: number | null = userData ? userData.user_id : null;
+
+
     const webcamRef = useRef<Webcam>(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
+    const [showMessageModal, setShowMessageModal] = useState(false);
+    const [message, setMessege] = useState("");
+    const [showClockInButton, setShowClockInButton] = useState(true);
+    const [showClockOutButton, setShowClockOutButton] = useState(false);
     const [hours, setHours] = useState<number | undefined>(undefined);
     const [clockOutData, setClockOutData] = useState<{
         attendance_picture: string;
@@ -23,11 +37,34 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
         clock_type: string;
     } | undefined>(undefined);
 
-    const userDataString = localStorage.getItem('userData');
-    const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
-    const userId: number | null = userData ? userData.user_id : null;
 
+    useEffect(() => {
+        checkClockStatus()
+    }, []);
 
+    const checkClockStatus = async () => {
+        try {
+            const currentDate = new Date();
+            let date
+            if (currentDate.getTimezoneOffset() !== -300) {
+                const estdate = new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+                date = estdate.toISOString().split('T')[0];
+            } else {
+                date = currentDate.toISOString().split('T')[0];
+            }
+            const response = await axios.get(APIS.getCLockInStatusByUserIdAndDate, { params: { userId, date } });
+            if (response && response.data.clock_type == 'CI') {
+                setShowClockInButton(false);
+                setShowClockOutButton(true);
+            } else if (response && response.data.clock_type == 'CO') {
+                setShowClockInButton(true);
+                setShowClockOutButton(false);
+            }
+
+        } catch (error) {
+            console.error('Error fetching attendance data:', error);
+        }
+    }
 
     const captureClockOut = useCallback(async () => {
         if (webcamRef.current) {
@@ -95,16 +132,11 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
             // If the user's time zone is not in EST, convert the server time to EST
             if (userTimeZone !== 'America/New_York') {
                 const estClockInTime = new Date(serverClockInTime.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-                // console.log('Clock in time in EST:', estClockInTime);
-                // Calculate the time difference in hours
                 const timeDifferenceHours = (localClockInTime.valueOf() - estClockInTime.valueOf()) / (1000 * 60 * 60);
                 return timeDifferenceHours;
             } else {
-                console.log('Clock in time in local time zone:', serverClockInTime);
-                // Calculate the time difference in hours
                 const timeDifferenceHours = (localClockInTime.valueOf() - serverClockInTime.valueOf()) / (1000 * 60 * 60);
                 return timeDifferenceHours;
-
             }
 
         } catch (error) {
@@ -119,9 +151,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
             const attendance_picture = webcamRef.current.getScreenshot();
             try {
                 const location = await getCurrentLocation();
-
-                console.log('Live Location:', location);
-
                 const attendanceData = {
                     attendance_picture: attendance_picture,
                     location: location,
@@ -132,12 +161,12 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
                 const response = await dispatch(attendance(attendanceData));
 
                 if (response && response.payload) {
-                    alert(response.payload.message)
+                    setMessege(response.payload.message)
+                    setShowMessageModal(true)
+                    // alert()
                     handleStartTimer();
-                    navigate('/');
+                    navigate('/attendance');
                 }
-
-                // Do something with the captured image, location, and location name.
             } catch (error) {
                 console.error('Error getting live location:', error);
             }
@@ -180,6 +209,9 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
     const handleClose = async () => {
         onClose()
     };
+    const closeMessegeModal = async () => {
+        setShowMessageModal(false)
+    };
 
     return (
         <>
@@ -197,19 +229,18 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
                                 mirrored={false}
                                 style={{ transform: "scaleX(-1)" }}
                             />
-                            <div className='flex gap-10 mb-10'>
-                                <button className="inline-flex items-center justify-center gap-2.5 rounded-md bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10 mt-10" onClick={captureClockIn}>
-                                    Clock In
-                                </button>
-                                <button className="inline-flex items-center justify-center gap-2.5 rounded-md bg-danger py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10 mt-10" onClick={captureClockOut}>
-                                    Clock Out
-                                </button>
+                            <div className='flex gap-10 mb-10 mt-10'>
+                                {showClockInButton ?
+                                    <PrimaryButton onClick={captureClockIn}>Clock In</PrimaryButton> : null
+                                }
+                                {showClockOutButton ?
+                                    <DangerButton onClick={captureClockOut}>Clock Out</DangerButton> : null
+                                }
                             </div>
-                            <button className="absolute inline-flex items-center  right-0 bottom-0 rounded-md bg-secondary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10 mb-10 mr-10 h-9" onClick={handleClose}>
-                                Close
-                            </button>
+                            <SecondaryButton onClick={handleClose}>Close</SecondaryButton>
+
                             {showModal ? (
-                                <ClockOutWarningModal isOpen={showModal} hours={hours} clockOutData={clockOutData} onClose={handleCloseModal} />
+                                <ClockOutWarningModal isOpen={showModal} hours={hours} clockOutData={clockOutData} onClose={handleCloseModal} handleClockOutOk={function (): void { } } otherFunction={function (): void {onClose} } />
                             ) : null}
                         </div>
 
@@ -225,6 +256,10 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
                 </div>
             </div>
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+            {showMessageModal ?
+                <MessegeModal displayText={message} onClose={closeMessegeModal} otherFunction={onClose} /> : null
+            }
+
         </>
     );
 };

@@ -2,13 +2,13 @@ import axios from "axios";
 import React from "react";
 import { APIS } from "../../apis";
 import { useNavigate } from "react-router-dom";
-import { ModalProps } from "../../common/interfaces";
+import { ClockModalProps } from "../../common/interfaces";
 import { resetTimer } from '../../redux/store/slices/timerSlice';
 import { useDispatch } from "react-redux";
 
 
 
-const ClockOutWarningModal: React.FC<ModalProps> = ({ hours, clockOutData, onClose }) => {
+const ClockOutWarningModal: React.FC<ClockModalProps> = ({ hours, clockOutData, onClose, handleClockOutOk, otherFunction }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleYesClick = async () => {
@@ -16,9 +16,11 @@ const ClockOutWarningModal: React.FC<ModalProps> = ({ hours, clockOutData, onClo
             try {
                 const response = await axios.post(APIS.clockOut, clockOutData);
                 if (response && response.data) {
-                    alert(response.data.message)
+                    // alert(response.data.message)
+                    otherFunction()
                     handleResetTimer()
                     onClose()
+                    handleClockOutOk()
                     navigate('/');
                 }
             } catch (error) {
@@ -71,6 +73,7 @@ const ClockOutWarningModal: React.FC<ModalProps> = ({ hours, clockOutData, onClo
                 </div>
             </div>
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+
         </>
     );
 };

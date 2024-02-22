@@ -104,7 +104,7 @@ export interface ClockOutData {
     clock_type: string;
 }
 
-export interface ModalProps {
+export interface ClockModalProps {
     isOpen: boolean;
     onClose: () => void;
     hours?: number;
@@ -114,6 +114,8 @@ export interface ModalProps {
         user_id: string;
         clock_type: string;
     };
+    handleClockOutOk: () => void
+    otherFunction: () => void
 }
 
 
@@ -204,6 +206,7 @@ export interface EmployeeProgressModalInterface {
 export interface MessegeModalProps {
     displayText: string;
     onClose: () => void;
+    otherFunction: () => void;
 }
 
 

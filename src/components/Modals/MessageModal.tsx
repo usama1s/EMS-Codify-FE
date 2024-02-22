@@ -3,10 +3,13 @@ import React from "react";
 import { MessegeModalProps } from "../../common/interfaces";
 import PrimaryButton from "../UI/PrimaryButton";
 
-const AttendanceModal: React.FC<MessegeModalProps> = ({ onClose, displayText }) => {
+const MessegeModal: React.FC<MessegeModalProps> = ({ onClose, displayText, otherFunction }) => {
 
     const handleClose = async () => {
         onClose()
+
+        //Made For Attendance modal to close
+        otherFunction()
     };
 
     return (
@@ -37,4 +40,4 @@ const AttendanceModal: React.FC<MessegeModalProps> = ({ onClose, displayText }) 
     );
 };
 
-export default AttendanceModal;
+export default MessegeModal;

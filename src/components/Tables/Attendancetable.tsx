@@ -8,25 +8,26 @@ import { APIS } from '../../apis';
 import AllEmployeeAttendanceModal from '../Modals/AllEmployeeAttendanceModal';
 import { DropdownDate } from 'react-dropdown-date';
 import './filter-all.css';
+import MessegeModal from '../Modals/MessageModal';
 
 
 const AttendenceTable = () => {
-
-    const [showAttendanceModal, setshowAttendance] = useState(false)
-    const [showProgressModal, setshowProgressModal] = useState(false)
-
     const userDataString = localStorage.getItem('userData');
     const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
     const userId: number | null = userData ? userData.user_id : null;
 
+
+    let [year, setyear] = useState<any>("Select Year");
+    const [monthstring, setmonthstring] = useState<any>("Select Month");
+    const [showAttendanceModal, setshowAttendance] = useState(false)
+    const [showProgressModal, setshowProgressModal] = useState(false)
     const [showModal, setShowModal] = useState(false)
-    // const [showRegisterModal, setShowRegisterModal] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(null);
     const [currentdataIndex, setCurrentdataIndex] = useState(null);
     const [AllAttendances, setAllAttendances] = useState<AttendanceData[]>([]);
     const [month, setmonth] = useState<any>();
-    let [year, setyear] = useState<any>("Select Year");
-    const [monthstring, setmonthstring] = useState<any>("Select Month");
+    const [messege, setMessege] = useState<any>();
+    const [showMessegeModal, setShowMessegeModal] = useState<any>(false);
 
 
     useEffect(() => {
@@ -53,13 +54,15 @@ const AttendenceTable = () => {
     const openProgressModal = async () => {
         const clockInStatus = await checkClockStatusToAddProgress();
         if (clockInStatus == "Not clocked in") {
-            alert("First clock in to add progress")
+            setMessege("First clock in to add progress")
+            setShowMessegeModal(true)
         }
         else if (clockInStatus == "CI") {
             setshowProgressModal(true)
         }
         else if (clockInStatus == "CO") {
-            alert("First clock in to add progress")
+            setMessege("First clock in to add progress")
+            setShowMessegeModal(true)
         }
         // setshowProgressModal(true)
 
@@ -67,7 +70,6 @@ const AttendenceTable = () => {
     const checkClockStatusToAddProgress = async () => {
         try {
             const currentDate = new Date();
-
             if (currentDate.getTimezoneOffset() !== -300) {
                 const estdate = new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
                 const date = estdate.toISOString().split('T')[0];
@@ -100,8 +102,9 @@ const AttendenceTable = () => {
         setshowAttendance(false)
     }
 
-
-
+    const closeMessageModal = () => {
+        setShowMessegeModal(false)
+    }
 
     const handleYearChange = (year: any) => {
         setyear(year);
@@ -198,7 +201,7 @@ const AttendenceTable = () => {
             </div>
             {AllAttendances.map((attendance, index) => (
                 attendance.attendance.map((attendanceData, dataIndex) => (
-                    <div key={index} className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
+                    <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
                         <div className="col-span-2 flex items-center">
                             <p className="text-sm text-black dark:text-white">{attendance.first_name} {attendance.last_name}</p>
                         </div>
@@ -245,6 +248,14 @@ const AttendenceTable = () => {
 
             {showProgressModal ? (
                 <EmployeeProgressModal onClose={closeProgressModal} />
+            ) : null}
+
+            {showProgressModal ? (
+                <EmployeeProgressModal onClose={closeProgressModal} />
+            ) : null}
+
+            {showMessegeModal ? (
+                <MessegeModal onClose={closeMessageModal} displayText={messege} otherFunction={function (): void { }} />
             ) : null}
 
         </div>
