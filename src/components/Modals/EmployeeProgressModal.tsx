@@ -64,13 +64,14 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
                     startTime = prevHour + ":" + prevMinute;
                     endTime = nextHour + ":" + nextMinutes;
                     const checkProgress = await checkIfProgressExists(startTime, endTime, date)
-                    if (checkProgress == false) {
-                        const newItem = { id: Date.now() + hourIterate, startTime, endTime, title: "", description: "" };
+                    if (checkProgress === false) {
+                        const newItem = { id: Date.now() + hourIterate, startTime, endTime, title: "", description: "", submitted: false };
                         newProgressItems.push(newItem);
                     } else {
-                        const prevItem = { id: Date.now() + hourIterate, startTime, endTime, title: checkProgress[0].title, description: checkProgress[0].description };
+                        const prevItem = { id: Date.now() + hourIterate, startTime, endTime, title: checkProgress[0].title, description: checkProgress[0].description, submitted: true };
                         newProgressItems.push(prevItem);
                     }
+
                     // console.log("Slot Hour", prevHour, "-", nextHour);
                     // console.log("Slot Minutes", prevMinute, "-", nextMinutes);
                 }
@@ -122,23 +123,25 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
         try {
             const currentDate = new Date();
             const date =
-                currentDate.getTimezoneOffset() !== -300
+                currentDate.getTimezoneOffset() !== 300
                     ? new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' })).toISOString().split('T')[0]
                     : currentDate.toISOString().split('T')[0];
             const specificItem = progressItems[index];
             const response = await axios.post(APIS.addDailyProgress, [specificItem, userId, date]);
             const userData = response.data;
-    
-            // Update state to indicate that progress has been submitted for this index
             setSubmittedIndices([...submittedIndices, index]);
-    
+            setProgressItems(prevItems => {
+                const updatedItems = [...prevItems];
+                updatedItems[index] = { ...updatedItems[index], submitted: true };
+                return updatedItems;
+            });
             return userData;
         } catch (error) {
             throw error;
         }
     };
 
- 
+
 
     return (
         <>
@@ -192,7 +195,6 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
                             ))}
                         </div> */}
 
-                                    
                         <div className="relative p-6 bg-black">
                             {progressItems.map((item, index) => (
                                 <div key={index} className="flex gap-30">
@@ -212,7 +214,7 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
                                             type="text"
                                             value={item.title}
                                             onChange={(e) => handleTitleChange(index, e.target.value)}
-                                            disabled={item.title !== ''}
+                                            disabled={item.submitted} // Disable input if already submitted
                                         />
                                     </div>
                                     <div>
@@ -221,17 +223,22 @@ const EmployeeProgressModal: React.FC<EmployeeProgressModalInterface> = ({ onClo
                                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-dark dark:border-form-strokedark dark.bg-form-input dark:focus:border-primary"
                                             value={item.description}
                                             onChange={(e) => handleDescriptionChange(index, e.target.value)}
-                                            disabled={item.description !== ''}
+                                            disabled={item.submitted} // Disable textarea if already submitted
                                         />
                                     </div>
-                                    {!(item.title || item.description) && ( // Render button only if title and description are empty
-                                        <div className="mt-10">
-                                            <PrimaryButton onClick={() => submitProgress(index)}>Submit Progress</PrimaryButton>
-                                        </div>
-                                    )}
+
+                                    <div className="mt-10">
+                                        {!item.submitted && (
+                                            <PrimaryButton onClick={() => submitProgress(index)}>
+                                                Submit Progress
+                                            </PrimaryButton>
+                                        )}
+                                    </div>
+
                                 </div>
                             ))}
                         </div>
+
 
 
 
