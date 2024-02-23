@@ -72,39 +72,45 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
             try {
                 const location = await getCurrentLocation();
                 const hours = await checkHours();
+                const progress = await isProgressEntered();
 
+                if (progress == true) {
 
-                if (hours !== undefined && hours <= 6) {
-                    const clockOutData = {
-                        attendance_picture: attendance_picture,
-                        location: location,
-                        user_id: userId,
-                        clock_type: 'CO'
-                    };
-
-                    if (hours !== undefined && clockOutData !== undefined) {
-                        const { attendance_picture, location, user_id, clock_type } = clockOutData;
-                        const sanitizedClockOutData = {
-                            attendance_picture: attendance_picture || '',
-                            location: location as string,
-                            user_id: user_id as unknown as string,
-                            clock_type: clock_type as unknown as string,
+                    if (hours !== undefined && hours <= 6) {
+                        const clockOutData = {
+                            attendance_picture: attendance_picture,
+                            location: location,
+                            user_id: userId,
+                            clock_type: 'CO'
                         };
 
-                        setHours(hours);
-                        setClockOutData(sanitizedClockOutData);
-                        setShowModal(true);
+                        if (hours !== undefined && clockOutData !== undefined) {
+                            const { attendance_picture, location, user_id, clock_type } = clockOutData;
+                            const sanitizedClockOutData = {
+                                attendance_picture: attendance_picture || '',
+                                location: location as string,
+                                user_id: user_id as unknown as string,
+                                clock_type: clock_type as unknown as string,
+                            };
 
+                            setHours(hours);
+                            setClockOutData(sanitizedClockOutData);
+                            setShowModal(true);
+
+                        }
                     }
-                }
-                else {
-                    try {
-                        const response = await axios.post(APIS.clockOut, clockOutData);
-                        handleResetTimer()
-                        console.log("API response:", response);
-                    } catch (error) {
-                        console.error("Error while calling clockOut API:", error);
+                    else {
+                        try {
+                            const response = await axios.post(APIS.clockOut, clockOutData);
+                            handleResetTimer()
+                            console.log("API response:", response);
+                        } catch (error) {
+                            console.error("Error while calling clockOut API:", error);
+                        }
                     }
+                }else{
+                    setMessege('Enter your daily progress first')
+                    setShowMessageModal(true)
                 }
 
             } catch (error) {
@@ -144,6 +150,61 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
             console.error('Error fetching clock in time:', error);
         }
     };
+
+
+    const isProgressEntered = async () => {
+        try {
+            const currentDate = new Date();
+            let estdate: any;
+            let allStartTime: any = []
+            if (currentDate.getTimezoneOffset() !== -300) {
+                estdate = new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+            } else {
+                estdate = currentDate.toISOString().split('T')[0];
+            }
+            const date = currentDate?.toISOString().split('T')[0];
+            const response = await axios.get(APIS.getClockInTimeByUserIdAndDate, { params: { userId, date } });
+            if (response) {
+                const time = response.data;
+                const [hours, minutes] = time.split(':').map(Number);
+                const currentHours = currentDate.getHours();
+                const currentMinutes = currentDate.getMinutes();
+                let hourIterate = hours + 1;
+                let nextHour = 0;
+                let nextMinutes = 0;
+                let startTime: string;
+                let endTime: string;
+                let prevMinute;
+                startTime = hours + ":" + minutes;
+                endTime = hourIterate + ":" + nextMinutes;
+                for (hourIterate; hourIterate <= currentHours + 1; hourIterate++) {
+                    nextHour = hourIterate;
+                    const prevHour = nextHour - 1;
+                    if (nextHour === hours + 1) {
+                        prevMinute = minutes;
+                    } else {
+                        prevMinute = 0;
+                    }
+                    if (prevHour === currentHours) {
+                        nextMinutes = currentMinutes;
+                        nextHour = currentHours;
+                    }
+                    startTime = prevHour + ":" + prevMinute;
+                    endTime = nextHour + ":" + nextMinutes;
+                    allStartTime.push(startTime)
+                }
+                const checkAllProgressEntered: any = await checkProgressEntered(allStartTime, date)
+                return checkAllProgressEntered
+            }
+        } catch (error) {
+            console.error('Error fetching attendance data:', error);
+        }
+    };
+
+    const checkProgressEntered = async (allStartTime: any, date: string) => {
+        const response = await axios.get(APIS.checkAllProgressEntered, { params: { userId, date, allStartTime } });
+        return (response.data)
+    }
 
 
     const captureClockIn = useCallback(async () => {
@@ -240,7 +301,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
                             <SecondaryButton onClick={handleClose}>Close</SecondaryButton>
 
                             {showModal ? (
-                                <ClockOutWarningModal isOpen={showModal} hours={hours} clockOutData={clockOutData} onClose={handleCloseModal} handleClockOutOk={function (): void { } } otherFunction={function (): void {onClose} } />
+                                <ClockOutWarningModal isOpen={showModal} hours={hours} clockOutData={clockOutData} onClose={handleCloseModal} handleClockOutOk={function (): void { }} otherFunction={function (): void { onClose }} />
                             ) : null}
                         </div>
 

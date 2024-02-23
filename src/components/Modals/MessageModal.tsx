@@ -20,7 +20,7 @@ const MessegeModal: React.FC<MessegeModalProps> = ({ onClose, displayText, other
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none ">
 
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t bg-black">
-                            {/* <h3 className="text-3xl font-semibold text-white ">Are You Sure</h3> */}
+                            <h3 className="text-3xl font-semibold text-white ">Alert</h3>
                         </div>
 
                         <div className="relative p-6 flex-auto bg-black">

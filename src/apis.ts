@@ -21,6 +21,7 @@ export const APIS = {
     addDailyProgress: `${BaseURL}shared/add-daily-progress`,
     getClockInTimeByUserIdAndDate: `${BaseURL}shared/get-clockin-time/:userId/:date`,
     checkProgress: `${BaseURL}shared/check-progress`,
+    checkAllProgressEntered: `${BaseURL}shared/check-all-progress-entered`,
     getProgressDetails: `${BaseURL}shared/get-progress-detail/:attendanceId/:date`,
 };
 
