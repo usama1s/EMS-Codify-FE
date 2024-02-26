@@ -117,19 +117,13 @@ export const REGISTER_EMPLOYEE_FIELDS = [
 
 export const APPLY_LEAVE_FIELDS = [
   {
-    name: 'leave_reason',
-    type: 'text',
-    placeholder: 'Reason for leave application',
-    label: 'Reason',
-  },
-  {
-    name: 'from_date',
+    name: 'from',
     type: 'date',
     placeholder: 'From',
     label: 'From ',
   },
   {
-    name: 'till_date',
+    name: 'till',
     type: 'date',
     placeholder: 'Till date',
     label: 'Till',

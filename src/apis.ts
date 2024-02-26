@@ -23,5 +23,6 @@ export const APIS = {
     checkProgress: `${BaseURL}shared/check-progress`,
     checkAllProgressEntered: `${BaseURL}shared/check-all-progress-entered`,
     getProgressDetails: `${BaseURL}shared/get-progress-detail/:attendanceId/:date`,
+    applyLeave: `${BaseURL}shared/apply-for-leave`,
 };
 

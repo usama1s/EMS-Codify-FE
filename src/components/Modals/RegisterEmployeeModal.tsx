@@ -7,52 +7,9 @@ import { APIS } from "../../apis";
 import { REGISTER_EMPLOYEE_FIELDS } from "../../constants/constants";
 
 
-// const roles: any[] = [
-//     'Employee/Intern Attendence',
-//     'Leave Approvel',
-//     'Daily Progress',
-//     'Pay Schedule',
-//     'Employee Data',
-//     'Office Decorum'
-// ];
-
-// const roleValues: Record<string, number> = {
-//     'Employee/Intern Attendence': 1,
-//     'Leave Approvel': 2,
-//     'Daily Progress': 3,
-//     'Pay Schedule': 4,
-//     'Employee Data': 5,
-//     'Office Decorum': 6
-// };
-
-
 const RegisterEmployeeModal: React.FC<RegisterModalProps> = ({ onClose }) => {
     const initialFormData = useSelector(selectManager);
     const [formData, setFormData] = useState(initialFormData);
-    // const [Managers, seManagers] = useState<ManagerInterface[]>([]);
-
-    // const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
-
-    // const userDataString = localStorage.getItem('userData');
-    // const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
-    // const userType: number | null = userData ? userData.user_type : null;
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const response = await axios.get(APIS.getAllManagers);
-    //             if (response && response.data) {
-    //                 seManagers(response.data);
-    //             }
-    //             console.log(Managers)
-
-    //         } catch (error) {
-    //             console.error('Error fetching attendance data:', error);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, []);
 
 
     const registerEmployee = async (data: any) => {
@@ -110,29 +67,6 @@ const RegisterEmployeeModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                                         />
                                     </div>
                                 ))}
-                                {/* <div className="mt-3">
-                                    <label className="mb-2 block text-black dark:text-white">Reporting Manager</label>
-                                    <select
-                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                        name=""
-                                        id="">
-                                        <option >Select Manager</option>
-                                        {Managers?.map((manager: any, index: any) => (
-                                            <option value={manager?.user_id} >{manager?.first_name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="mt-3 mb-5">
-                                    <label className="mb-2 block text-black dark:text-white">Contract Status</label>
-                                    <select
-                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                        name=""
-                                        id="">
-                                        <option value={1} >Active</option>
-                                        <option value={2} >Terminated</option>
-                                        <option value={3}>Finished</option>
-                                    </select>
-                                </div> */}
                                 <div className="flex items-center bg-black justify-end p-2 border-t border-solid border-blueGray-200 rounded-b">
                                     <button
                                         className="text-white background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"

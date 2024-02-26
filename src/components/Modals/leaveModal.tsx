@@ -1,47 +1,107 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { selectManager } from "../../redux/store/slices/managerSlice";
-import { RegisterModalProps } from "../../common/interfaces";
+import { RegisterModalProps, UserData } from "../../common/interfaces";
 import axios from "axios";
 import { APIS } from "../../apis";
 import { APPLY_LEAVE_FIELDS, leaveOptions } from "../../constants/constants";
+import MessegeModal from "./MessageModal";
 
 const LeaveModal: React.FC<RegisterModalProps> = ({ onClose }) => {
-    const initialFormData = useSelector(selectManager);
-    const [formData, setFormData] = useState(initialFormData);
+    const userDataString = localStorage.getItem('userData');
+    const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
+    const userId: number | null = userData ? userData.user_id : null;
+
+    const [showMessageModal, setShowMessageModal] = useState(false);
+    const [message, setMessege] = useState("");
+    const [formData, setFormData] = useState({
+        from: '',
+        till: '',
+        category: '',
+    });
 
 
-    const registerEmployee = async (data: any) => {
+
+
+    const applyLeave = async (data: any) => {
         try {
-            const response = await axios.post(APIS.registerEmployee, data);
-            onClose();
-            return alert(response.data.message);
+            const response = await axios.post(APIS.applyLeave, data);
+            setMessege(response.data)
+            setShowMessageModal(true)
         } catch (error) {
-            throw error;
+            console.error('Error:', error);
         }
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Check if password and confirm password match
-        if (formData.password !== formData.confirm_password) {
-            alert("Password and Confirm Password do not match!");
+        console.log(formData);
+        if (!formData.from || !formData.till || !formData.category) {
+            alert('Please fill out all fields');
             return;
         }
 
-        console.log(formData);
 
-        registerEmployee(formData);
+        const dataWithUserId = {
+            userId: userId,
+            ...formData
+        };
+        applyLeave(dataWithUserId);
     };
 
-    const handleChange = (field: string, value: string) => {
-        setFormData((prevFormData: any) => ({ ...prevFormData, [field]: value }));
+
+    const handleChange = (name: string, value: string) => {
+        if (name === 'from') {
+            const selectedFromDate = new Date(value);
+            const maxDate = new Date(selectedFromDate);
+            maxDate.setDate(selectedFromDate.getDate() + 12);
+
+            if (selectedFromDate < new Date() || selectedFromDate > maxDate) {
+                alert('Selected from date should be between today and 12 days from today.');
+                return;
+            }
+
+            formData.from = value;
+
+            // Adjust till date if it's before new from date
+            if (formData.till && new Date(formData.till) < selectedFromDate) {
+                formData.till = ''; // Reset till date if it's before the new from date
+            }
+        }
+
+        if (name === 'till') {
+            const selectedTillDate = new Date(value);
+            const minDate = new Date(formData.from);
+            minDate.setDate(minDate.getDate() + 1); // Next day after from date
+            const maxDate = new Date(minDate);
+            maxDate.setDate(minDate.getDate() + 12); // 12 days after from date
+
+            if (selectedTillDate < minDate || selectedTillDate > maxDate) {
+                alert('Selected till date should be between 1 and 12 days after the from date.');
+                return;
+            }
+
+            formData.till = value;
+        }
+
+        setFormData({
+            ...formData,
+            [name]: value
+        });
     };
+
+
+
+
 
     const handleClose = () => {
         onClose()
     };
+
+    const closeMessegeModal = () => {
+        setShowMessageModal(false)
+    };
+
+
 
     return (
         <>
@@ -71,14 +131,18 @@ const LeaveModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                                     <select
                                         className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary "
                                         name="leaveType"
-                                        id="leaveType">
-                                        <option value="" disabled selected>Select Category</option>
+                                        id="leaveType"
+                                        value={formData.category}
+                                        onChange={(e) => handleChange('category', e.target.value)}
+                                    >
+                                        <option value="" disabled>Select Category</option>
                                         {leaveOptions.map(option => (
                                             <option key={option.value} value={option.value}>
                                                 {option.label}
                                             </option>
                                         ))}
                                     </select>
+
                                 </div>
                                 <div className="flex items-center bg-black justify-end p-2 border-t border-solid border-blueGray-200 rounded-b">
                                     <button
@@ -101,7 +165,9 @@ const LeaveModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                     </div>
                 </div>
             </div>
-
+            {showMessageModal ?
+                <MessegeModal displayText={message} onClose={closeMessegeModal} otherFunction={onClose} /> : null
+            }
 
         </>
     );

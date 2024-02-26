@@ -151,7 +151,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
         }
     };
 
-
     const isProgressEntered = async () => {
         try {
             const currentDate = new Date();
@@ -205,8 +204,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ onClose }) => {
         const response = await axios.get(APIS.checkAllProgressEntered, { params: { userId, date, allStartTime } });
         return (response.data)
     }
-
-
     const captureClockIn = useCallback(async () => {
         if (webcamRef.current) {
             const attendance_picture = webcamRef.current.getScreenshot();
