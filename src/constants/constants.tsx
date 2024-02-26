@@ -42,19 +42,19 @@ export const NAVIGATION_LINKS = [
     path: "/pay-schedule",
     text: "Pay Schedule",
     userTypes: [2],
-    role: [4]
+    role: [3]
   },
   {
     path: "/employee-data",
     text: "Employee Data",
     userTypes: [2],
-    role: [5]
+    role: [4]
   },
   {
     path: "/office-decorum",
     text: "Office Decorum",
     userTypes: [2],
-    role: [6]
+    role: [5]
   },
 ];
 
