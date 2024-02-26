@@ -15,7 +15,7 @@ const roles: any[] = [
 ];
 
 const roleValues: Record<string, number> = {
-    'Employee/Intern Attendence': 1,
+    'Employee/Intern Attendence and Progress': 1,
     'Leave Approvel': 2,
     'Pay Schedule': 3,
     'Employee Data': 4,
