@@ -89,7 +89,7 @@ const AttendenceTable = () => {
                 const date = currentDate.toISOString().split('T')[0];
                 const response = await axios.get(APIS.getCLockInStatusByUserIdAndDate, { params: { userId, date } });
                 if (response) {
-                    const message = response.data.message
+                    const message = response.data.clock_type
                     return message
                 }
             }
@@ -166,7 +166,7 @@ const AttendenceTable = () => {
     const closeleaveModal = async () => {
         await setshowLeaveModal(false)
     }
-    
+
 
     return (
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
