@@ -72,25 +72,38 @@ const AttendenceTable = () => {
     const checkClockStatusToAddProgress = async () => {
         try {
             const currentDate = new Date();
+            let response
             if (currentDate.getTimezoneOffset() !== -300) {
                 const estdate = new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
                 const date = estdate.toISOString().split('T')[0];
-                const response = await axios.get(APIS.getCLockInStatusByUserIdAndDate, { params: { userId, date } });
-                if (response) {
-                    if (response.data.message) {
-                        const message = response.data.message
-                        return message
-                    } else {
-                        const clockType = response.data.clock_type
-                        return clockType
-                    }
-                }
+                response = await axios.get(APIS.getCLockInStatusByUserIdAndDate, { params: { userId, date } });
+                // if (response) {
+                //     if (response.data.message) {
+                //         const message = response.data.message
+                //         return message
+                //     } else {
+                //         const clockType = response.data.clock_type
+                //         return clockType
+                //     }
+                // }
             } else {
                 const date = currentDate.toISOString().split('T')[0];
-                const response = await axios.get(APIS.getCLockInStatusByUserIdAndDate, { params: { userId, date } });
-                if (response) {
-                    const message = response.data.clock_type
+                response = await axios.get(APIS.getCLockInStatusByUserIdAndDate, { params: { userId, date } });
+                // if (response.data.message) {
+                //     const message = response.data.message
+                //     return message
+                // } else {
+                //     const clockType = response.data.clock_type
+                //     return clockType
+                // }
+            }
+            if (response) {
+                if (response.data.message) {
+                    const message = response.data.message
                     return message
+                } else {
+                    const clockType = response.data.clock_type
+                    return clockType
                 }
             }
         } catch (error) {
