@@ -1,7 +1,7 @@
 import { lazy, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import SignIn from './pages/Authentication/SignIn';
+import SignIn from './pages/SignIn';
 import Loader from './common/Loader';
 import RegisterUser from './pages/RegisterUser';
 import Profile from './pages/Profile';
@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import MarkAttendance from './pages/MarkAttendance';
 import EmployeeData from './pages/EmployeeData';
 import AllEmployeeAttendance from './pages/AllEmployeeAttendance';
+import LeaveApproval from './pages/LeaveApproval';
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
@@ -61,6 +62,10 @@ function App() {
           <Route
             path='/employee-attendence-and-progress'
             element={<ProtectedRoute Component={AllEmployeeAttendance} />}
+          />
+          <Route
+            path='/leave-approval'
+            element={<ProtectedRoute Component={LeaveApproval} />}
           />
         </Route>
 

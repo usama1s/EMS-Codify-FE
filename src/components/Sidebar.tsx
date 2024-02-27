@@ -111,21 +111,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
               MENU
             </h3>
-            {/* <ul className="mb-6 flex flex-col gap-1.5">
-              {NAVIGATION_LINKS.map((link, index) => (
-                (link.userTypes && userType && link.userTypes.includes(userType) && link.role.includes(roles)) && (
-                  <li key={index}>
-                    <NavLink
-                      to={link.path}
-                      className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes(link.path) && 'bg-graydark dark:bg-meta-4'
-                        }`}
-                    >
-                      {link.text}
-                    </NavLink>
-                  </li>
-                )
-              ))}
-            </ul> */}
             <ul className="mb-2 flex flex-col gap-1.5">
               {NAVIGATION_LINKS.map((link, index) => {
                 // Check if user type is included in the userTypes array

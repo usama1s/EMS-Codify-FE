@@ -1,10 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
 // import LogoDark from '../../images/logo/logo-dark.svg';
 // import Logo from '../../images/logo/logo.svg';
-import { userLogin, logIn } from '../../redux/store/slices/loginSlice';
+import { userLogin, logIn } from '../redux/store/slices/loginSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { setUserData } from '../../redux/store/slices/userSlice';
+import { setUserData } from '../redux/store/slices/userSlice';
 
 
 const SignIn = () => {

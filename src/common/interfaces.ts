@@ -210,9 +210,27 @@ export interface MessegeModalProps {
     otherFunction: () => void;
 }
 
+export interface LeaveData {
+    leave_id: number;
+    first_name: string;
+    last_name: string;
+    from_date: string;
+    till_date: string;
+    leave_category: string;
+    leave_status: string;
+    leaveId: number;
+}
 
-
-
+export interface LeaveDetailModalProps {
+    onClose: () => void;
+    firstName: string
+    lastName: string;
+    fromDate: string;
+    tillDate: string;
+    leaveCategory: string;
+    leaveStatus: string;
+    leaveId: number;
+}
 
 
 
