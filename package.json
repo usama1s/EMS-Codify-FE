@@ -29,6 +29,7 @@
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
     "react-date-dropdown": "^0.2.0",
+    "react-datepicker": "^6.2.0",
     "react-dom": "^18.2.0",
     "react-dropdown-date": "^2.2.7",
     "react-hot-toast": "^2.4.1",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.2.17",
+    "@types/react-datepicker": "^6.0.1",
     "@types/react-dom": "^18.2.7",
     "@types/redux-devtools-extension": "^2.13.2",
     "@vitejs/plugin-react": "^4.0.3",

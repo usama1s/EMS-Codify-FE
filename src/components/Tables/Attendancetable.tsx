@@ -9,7 +9,6 @@ import AllEmployeeAttendanceModal from '../Modals/AllEmployeeAttendanceModal';
 import { DropdownDate } from 'react-dropdown-date';
 import './filter-all.css';
 import MessegeModal from '../Modals/MessageModal';
-import LeaveModal from '../Modals/leaveModal';
 
 
 const AttendenceTable = () => {
@@ -21,7 +20,6 @@ const AttendenceTable = () => {
     let [year, setyear] = useState<any>("Select Year");
     const [monthstring, setmonthstring] = useState<any>("Select Month");
     const [showAttendanceModal, setshowAttendance] = useState(false)
-    const [showLeaveModal, setshowLeaveModal] = useState(false)
     const [showProgressModal, setshowProgressModal] = useState(false)
     const [showModal, setShowModal] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(null);
@@ -158,14 +156,6 @@ const AttendenceTable = () => {
         }
     };
 
-    const openleaveModal = async () => {
-        await setshowLeaveModal(true)
-    }
-    const closeleaveModal = async () => {
-        await setshowLeaveModal(false)
-    }
-
-
     return (
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="flex justify-between py-6 px-4 md:px-6 xl:px-7.5">
@@ -176,11 +166,10 @@ const AttendenceTable = () => {
 
                 <div className=''>
                     <div className='flex gap-8 mb-5'>
-                        <PrimaryButton onClick={openleaveModal}>Apply for leave</PrimaryButton>
                         <PrimaryButton onClick={openProgressModal}>Mark Daily Progress</PrimaryButton>
                         <PrimaryButton onClick={openAttendanceModal}>Mark Attendence</PrimaryButton>
                     </div>
-                    <div className="filters-all ml-30">
+                    <div className="filters-all">
                         <DropdownDate
                             onMonthChange={handleMonthChange}
                             onYearChange={handleYearChange}
@@ -266,9 +255,7 @@ const AttendenceTable = () => {
                 <MessegeModal onClose={closeMessageModal} displayText={messege} otherFunction={function (): void { }} />
             ) : null}
 
-            {showLeaveModal ? (
-                <LeaveModal onClose={closeleaveModal} />
-            ) : null}
+        
 
         </div>
     );

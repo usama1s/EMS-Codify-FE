@@ -115,21 +115,6 @@ export const REGISTER_EMPLOYEE_FIELDS = [
 ];
 
 
-export const APPLY_LEAVE_FIELDS = [
-  {
-    name: 'from',
-    type: 'date',
-    placeholder: 'From',
-    label: 'From ',
-  },
-  {
-    name: 'till',
-    type: 'date',
-    placeholder: 'Till date',
-    label: 'Till',
-  },
-];
-
 export const leaveOptions = [
   { value: "marriage_leave", label: "Marriage Leave" },
   { value: "sick_leave", label: "Sick Leave" },

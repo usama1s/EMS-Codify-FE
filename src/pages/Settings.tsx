@@ -14,7 +14,7 @@ interface InputFieldProps {
 // import { Table } from "../components/TableSettings";
 // import { Modal } from "../components/ModalSettings";
 // import { useState, useEffect } from "react";
-const Settings = () => {
+const Settings:React.FC = () => {
   // const [modalOpen, setModalOpen] = useState(false);
   // const [rows, setRows] = useState(localStorage.getItem("alertSettings") ? JSON.parse(localStorage.getItem("alertSettings")) : []);
   // useEffect(() => {

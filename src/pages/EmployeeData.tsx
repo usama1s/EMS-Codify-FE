@@ -5,7 +5,7 @@ import axios from 'axios';
 import { APIS } from '../apis';
 import AllEmployeeTable from '../components/Tables/AllEmployeesTable';
 
-const EmployeeData = () => {
+const EmployeeData:React.FC = () => {
     const userDataString = localStorage.getItem('userData');
     const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
     const userType: number | null = userData ? userData.user_type : null;

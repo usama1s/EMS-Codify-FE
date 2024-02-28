@@ -1,7 +1,7 @@
 import Breadcrumb from '../components/Breadcrumb.tsx';
 import EmployeeAttendanceTable from '../components/Tables/AllEmployeeAttendenceTable.tsx';
 
-const AllEmployeeAttendance = () => {
+const AllEmployeeAttendance:React.FC = () => {
 
 
   return (

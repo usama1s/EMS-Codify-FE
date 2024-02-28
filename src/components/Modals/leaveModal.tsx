@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { RegisterModalProps, UserData } from "../../common/interfaces";
 import axios from "axios";
 import { APIS } from "../../apis";
-import { APPLY_LEAVE_FIELDS, leaveOptions } from "../../constants/constants";
+import { leaveOptions } from "../../constants/constants";
 import MessegeModal from "./MessageModal";
 
 const LeaveModal: React.FC<RegisterModalProps> = ({ onClose }) => {
@@ -12,14 +12,55 @@ const LeaveModal: React.FC<RegisterModalProps> = ({ onClose }) => {
 
     const [showMessageModal, setShowMessageModal] = useState(false);
     const [message, setMessege] = useState("");
-    const [formData, setFormData] = useState({
-        from: '',
-        till: '',
-        category: '',
-    });
 
 
 
+    const [from, setFromDate] = useState<string | null>(null);
+    const [till, setTillDate] = useState<string | null>(null);
+    const [category, setCategory] = useState<string | null>(null);
+    
+    const today = new Date();
+    const minDate = new Date(today);
+    minDate.setDate(minDate.getDate() + 2); // Add 2 days
+    const maxDate = new Date(today);
+    maxDate.setDate(maxDate.getDate() + 14); // Add 12 days
+
+    const minDateString = minDate.toISOString().split('T')[0];
+    const maxDateString = maxDate.toISOString().split('T')[0];
+
+    const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFromDate(event.target.value);
+        setTillDate(null);
+    };
+
+   
+    const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTillDate(event.target.value);
+    };
+
+    const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setCategory(event.target.value);
+    };
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const dataToSend = {
+            userId,
+            from,
+            till,
+            category
+        };
+        applyLeave(dataToSend);
+
+    };
+
+    let maxTillDate: string | undefined;
+    if (from) {
+        const fromDate = new Date(from);
+        const maxDateAllowed = new Date(fromDate);
+        maxDateAllowed.setDate(maxDateAllowed.getDate() + 2); // Add 3 days
+        maxTillDate = maxDateAllowed.toISOString().split('T')[0];
+    }
 
     const applyLeave = async (data: any) => {
         try {
@@ -31,68 +72,6 @@ const LeaveModal: React.FC<RegisterModalProps> = ({ onClose }) => {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-
-        console.log(formData);
-        if (!formData.from || !formData.till || !formData.category) {
-            alert('Please fill out all fields');
-            return;
-        }
-
-
-        const dataWithUserId = {
-            userId: userId,
-            ...formData
-        };
-        applyLeave(dataWithUserId);
-    };
-
-
-    const handleChange = (name: string, value: string) => {
-        if (name === 'from') {
-            const selectedFromDate = new Date(value);
-            const maxDate = new Date(selectedFromDate);
-            maxDate.setDate(selectedFromDate.getDate() + 12);
-
-            if (selectedFromDate < new Date() || selectedFromDate > maxDate) {
-                alert('Selected from date should be between today and 12 days from today.');
-                return;
-            }
-
-            formData.from = value;
-
-            // Adjust till date if it's before new from date
-            if (formData.till && new Date(formData.till) < selectedFromDate) {
-                formData.till = ''; // Reset till date if it's before the new from date
-            }
-        }
-
-        if (name === 'till') {
-            const selectedTillDate = new Date(value);
-            const minDate = new Date(formData.from);
-            minDate.setDate(minDate.getDate() + 1); // Next day after from date
-            const maxDate = new Date(minDate);
-            maxDate.setDate(minDate.getDate() + 12); // 12 days after from date
-
-            if (selectedTillDate < minDate || selectedTillDate > maxDate) {
-                alert('Selected till date should be between 1 and 12 days after the from date.');
-                return;
-            }
-
-            formData.till = value;
-        }
-
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
-
-
-
-
-
     const handleClose = () => {
         onClose()
     };
@@ -100,6 +79,19 @@ const LeaveModal: React.FC<RegisterModalProps> = ({ onClose }) => {
     const closeMessegeModal = () => {
         setShowMessageModal(false)
     };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -115,25 +107,39 @@ const LeaveModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                         </div>
                         <div className="relative bg-black p-6 flex-auto">
                             <form onSubmit={handleSubmit}>
-                                {APPLY_LEAVE_FIELDS.map((field, index) => (
-                                    <div key={index} className="mb-4.5">
-                                        <label className="mb-2 block text-black dark:text-white">{field.label}</label>
-                                        <input
-                                            type={field.type}
-                                            placeholder={field.placeholder}
-                                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                            onChange={(e) => handleChange(field.name, e.target.value)}
-                                        />
-                                    </div>
-                                ))}
+                                <div className="mb-5">
+                                    <label htmlFor="from" className="mb-2 block text-black dark:text-white">From </label>
+                                    <input
+                                        type="date"
+                                        id="from"
+                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                        value={from || ""}
+                                        min={minDateString}
+                                        max={maxDateString}
+                                        onChange={handleStartDateChange}
+                                    />
+                                </div>
+                                <div className="mb-5">
+                                    <label htmlFor="till" className="mb-2 block text-black dark:text-white">Till (Select from date first)</label>
+                                    <input
+                                        type="date"
+                                        id="till"
+                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                        value={till || ""}
+                                        min={from || minDateString} // Set min to From date if available
+                                        max={maxTillDate || maxDateString} // Set max to 3 days after From date if available
+                                        onChange={handleEndDateChange}
+                                        disabled={!from} // Disable till date if from date is not selected
+                                    />
+                                </div>
                                 <div className="mb-5">
                                     <label className="mb-2 block text-black dark:text-white">Select Category</label>
                                     <select
                                         className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary "
                                         name="leaveType"
                                         id="leaveType"
-                                        value={formData.category}
-                                        onChange={(e) => handleChange('category', e.target.value)}
+                                        value={category || ""}
+                                        onChange={handleCategoryChange}
                                     >
                                         <option value="" disabled>Select Category</option>
                                         {leaveOptions.map(option => (
@@ -142,7 +148,6 @@ const LeaveModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                                             </option>
                                         ))}
                                     </select>
-
                                 </div>
                                 <div className="flex items-center bg-black justify-end p-2 border-t border-solid border-blueGray-200 rounded-b">
                                     <button

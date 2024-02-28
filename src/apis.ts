@@ -26,5 +26,6 @@ export const APIS = {
     applyLeave: `${BaseURL}shared/apply-for-leave`,
     getAllPendingleaves: `${BaseURL}shared/get-all-pending-leaves`,
     updateLeaveStatus: `${BaseURL}shared/update-leave-status`,
+    getAllAppliedleavesByUserId: `${BaseURL}shared/get-all-leaves-applied-by-userid`,
 };
 

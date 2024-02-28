@@ -12,6 +12,7 @@ import MarkAttendance from './pages/MarkAttendance';
 import EmployeeData from './pages/EmployeeData';
 import AllEmployeeAttendance from './pages/AllEmployeeAttendance';
 import LeaveApproval from './pages/LeaveApproval';
+import PaySchedule from './pages/PaySchedule';
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
@@ -67,35 +68,11 @@ function App() {
             path='/leave-approval'
             element={<ProtectedRoute Component={LeaveApproval} />}
           />
+          <Route
+            path='/pay-schedule'
+            element={<ProtectedRoute Component={PaySchedule} />}
+          />
         </Route>
-
-
-        {/* <Route
-          path="/"
-          element={
-            isAuthenticated ? (
-              <Navigate to="/dashboard" replace />
-            ) : (
-              <SignIn />
-            )
-          }
-        />
-        <Route element={<DefaultLayout />}>
-          {routes.map((route, index) => {
-            const { path, component: Component } = route;
-            return (
-              <Route
-                key={index}
-                path={path}
-                element={
-                  <Suspense fallback={<Loader />}>
-                    <Component />
-                  </Suspense>
-                }
-              />
-            );
-          })}
-        </Route> */}
       </Routes >
     </>
   );
