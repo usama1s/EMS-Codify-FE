@@ -11,7 +11,8 @@ const roles: any[] = [
     'Leave Approvel',
     'Pay Schedule',
     'Employee Data',
-    'Office Decorum'
+    'Office Decorum',
+    'Asset Management'
 ];
 
 const roleValues: Record<string, number> = {
@@ -19,7 +20,8 @@ const roleValues: Record<string, number> = {
     'Leave Approvel': 2,
     'Pay Schedule': 3,
     'Employee Data': 4,
-    'Office Decorum': 5
+    'Office Decorum': 5,
+    'Asset Management': 6
 };
 
 const inputFields = [

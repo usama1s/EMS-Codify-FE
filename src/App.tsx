@@ -13,6 +13,7 @@ import EmployeeData from './pages/EmployeeData';
 import AllEmployeeAttendance from './pages/AllEmployeeAttendance';
 import LeaveApproval from './pages/LeaveApproval';
 import PaySchedule from './pages/PaySchedule';
+import AssetManagement from './pages/AssetManagement';
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
@@ -71,6 +72,10 @@ function App() {
           <Route
             path='/pay-schedule'
             element={<ProtectedRoute Component={PaySchedule} />}
+          />
+          <Route
+            path='/asset-management'
+            element={<ProtectedRoute Component={AssetManagement} />}
           />
         </Route>
       </Routes >

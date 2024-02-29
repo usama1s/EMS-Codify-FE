@@ -56,6 +56,12 @@ export const NAVIGATION_LINKS = [
     userTypes: [2],
     role: [5]
   },
+  {
+    path: "/asset-management",
+    text: "Asset Management",
+    userTypes: [2],
+    role: [6]
+  },
 ];
 
 
@@ -149,4 +155,27 @@ export const EMPLOYEE_CONTRACT_FIELDS = [
     placeholder: '60,000',
     label: 'Employee Pay',
   },
+];
+
+
+export const ADD_ASSET_FIELDS = [
+  {
+    name: 'title',
+    type: 'text',
+    placeholder: 'Enter assets title',
+    label: 'Title',
+  },
+  {
+    name: 'description',
+    type: 'text',
+    placeholder: 'Enter assets descriptions (OPTIONAL)',
+    label: 'Description',
+  },
+  {
+    name: 'company',
+    type: 'text',
+    placeholder: 'Enter company name',
+    label: 'Company',
+  },
+ 
 ];
