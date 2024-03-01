@@ -11,6 +11,9 @@ export const APIS = {
     getAllEmployees: `${BaseURL}manager/get-all-employees`,
     registerEmployee: `${BaseURL}manager/register-employee`,
     getAllEmployeesAttendence: `${BaseURL}manager/get-all-employees-attendance/:year/:month`,
+    addAsset: `${BaseURL}manager/add-asset-data`,
+    getAllUsers: `${BaseURL}manager/get-all-users`,
+    getAllAsset: `${BaseURL}manager/get-all-assets`,
     // ATTENDANCE
     markAttendance: `${BaseURL}attendence/insert-attendence`,
     getClockInTime: `${BaseURL}attendence/get-clock-in-time/:user_id`,

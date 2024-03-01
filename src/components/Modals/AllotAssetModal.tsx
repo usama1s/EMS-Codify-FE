@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectManager } from "../../redux/store/slices/managerSlice";
 import { AssetData, RegisterModalProps, UserData } from "../../common/interfaces";
@@ -9,17 +9,33 @@ import { ADD_ASSET_FIELDS } from "../../constants/constants";
 
 
 
-const AddAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
+const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
 
     const userDataString = localStorage.getItem('userData');
     const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
     const userId: number | null = userData ? userData.user_id : null;
+    const [users, setUsers] = useState(null);
+    const [selectedUsers, setSelectedUsers] = useState('');
+    const [formData, setFormData] = useState(null);
 
 
-    const initialFormData = useSelector(selectManager);
-    const [formData, setFormData] = useState(initialFormData);
+    useEffect(() => {
+        fetchUsersData();
+    }, []);
 
-    const addAsset = async (data: any) => {
+    const fetchUsersData = async () => {
+        try {
+            const response = await axios.get(APIS.getAllUsers);
+            if (response && response.data) {
+                setUsers(response.data);
+            }
+        } catch (error) {
+            console.error('Error fetching attendance data:', error);
+        }
+    };
+
+
+    const allotAsset = async (data: any) => {
         try {
             const response = await axios.post(APIS.addAsset, data);
             onClose();
@@ -49,10 +65,9 @@ const AddAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
             }
         }
 
-        // console.log(data);
 
 
-        await addAsset(data);
+        await allotAsset(data);
     };
 
     const convertToBase64 = (file: File): Promise<string> => {
@@ -72,8 +87,8 @@ const AddAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
 
 
 
-    const handleChange = (field: string, value: string) => {
-        setFormData((prevFormData: any) => ({ ...prevFormData, [field]: value }));
+    const handleUserChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedUsers(event.target.value);
     };
 
     const handleClose = () => {
@@ -87,22 +102,30 @@ const AddAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                         <div className="flex items-start bg-black justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                             <h3 className="text-3xl font-semibold">
-                                Add Assets Detail
+                                Allot Asset
                             </h3>
                         </div>
                         <div className="relative bg-black p-6 flex-auto">
                             <form onSubmit={handleSubmit}>
-                                {ADD_ASSET_FIELDS.map((field, index) => (
-                                    <div key={index} className="mb-4.5">
-                                        <label className="mb-2 block text-black dark:text-white">{field.label}</label>
-                                        <input
-                                            type={field.type}
-                                            placeholder={field.placeholder}
-                                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                            onChange={(e) => handleChange(field.name, e.target.value)}
-                                        />
-                                    </div>
-                                ))}
+                                <div className="mb-5">
+                                    <label className="mb-2 block text-black dark:text-white">Select Employee</label>
+                                    <select
+                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary "
+                                        name="leaveType"
+                                        id="leaveType"
+                                        value={selectedUsers || ""}
+                                        onChange={handleUserChange}
+                                    >
+                                        <option value="" disabled>Select Category</option>
+                                        {users && users.map(user => (
+                                            <option key={user.id} value={user.user_id}>
+                                                {user.first_name} {user.last_name}
+                                            </option>
+                                        ))}
+
+
+                                    </select>
+                                </div>
 
                                 <div className="d-flex">
                                     <div className="d-flex">
@@ -136,4 +159,4 @@ const AddAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
     );
 };
 
-export default AddAssetsModal;
+export default AllotAssetsModal;

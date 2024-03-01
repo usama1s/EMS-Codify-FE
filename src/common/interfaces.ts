@@ -78,6 +78,14 @@ export interface AttendanceData {
     profile_picture: string | null;
 }
 
+export interface AssetTableData {
+    assetId:number,
+    title:string,
+    description:string,
+    company:string,
+    pictures:[]
+}
+
 export interface Coordinates {
     latitude: number;
     longitude: number;
@@ -232,7 +240,22 @@ export interface LeaveDetailModalProps {
     leaveId: number;
 }
 
+export interface AssetDetailModalProps {
+    onClose: () => void;
+    assetId: number
+    title: string;
+    description: string;
+    company: string;
+    pictures:[]
+}
 
+export interface AssetData {
+    userId: number;
+    title: string;
+    description: string;
+    company: string,
+    pictures: File[];
+}
 
 
 

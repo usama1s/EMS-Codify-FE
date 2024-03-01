@@ -176,6 +176,5 @@ export const ADD_ASSET_FIELDS = [
     type: 'text',
     placeholder: 'Enter company name',
     label: 'Company',
-  },
- 
+  }
 ];
