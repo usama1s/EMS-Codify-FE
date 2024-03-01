@@ -27,7 +27,7 @@ const AssetManagement: React.FC = () => {
             <>
                 <div className='flex gap-5'>
                     <div onClick={handleAllAssetsTable}>
-                        <Breadcrumb pageName="All Assest" />
+                        <Breadcrumb pageName="All Asset" />
                     </div>
                     <div className='border-l solid-white pl-5 mb-5' onClick={handleShowLeaves}>
                         <Breadcrumb pageName="Alotted Assets" />

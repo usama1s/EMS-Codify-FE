@@ -79,11 +79,11 @@ export interface AttendanceData {
 }
 
 export interface AssetTableData {
-    assetId:number,
-    title:string,
-    description:string,
-    company:string,
-    pictures:[]
+    assetId: number,
+    title: string,
+    description: string,
+    company: string,
+    pictures: []
 }
 
 export interface Coordinates {
@@ -246,7 +246,7 @@ export interface AssetDetailModalProps {
     title: string;
     description: string;
     company: string;
-    pictures:[]
+    pictures: []
 }
 
 export interface AssetData {
@@ -257,6 +257,11 @@ export interface AssetData {
     pictures: File[];
 }
 
+export interface AssetAllotData {
+    userId: number;
+    assetId: number;
+    pictures: File[];
+}
 
 
 
