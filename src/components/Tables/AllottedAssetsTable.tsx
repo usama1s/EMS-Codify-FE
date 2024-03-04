@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AssetTableData } from '../../common/interfaces';
+import { AllotedAssetTableData } from '../../common/interfaces';
 import PrimaryButton from '../UI/PrimaryButton';
 import axios from 'axios';
 import { APIS } from '../../apis';
@@ -13,7 +13,7 @@ const AllottedAssetsTable = () => {
     const [showAllotAssetModal, setShowAllotAssetModal] = useState(false)
     const [showModal, setShowModal] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(null);
-    const [allAssets, setAllAssets] = useState<AssetTableData[]>([]);
+    const [allAssets, setAllAssets] = useState<AllotedAssetTableData[]>([]);
 
 
     useEffect(() => {
@@ -22,7 +22,7 @@ const AllottedAssetsTable = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(APIS.getAllAsset);
+            const response = await axios.get(APIS.getAllAllottedAsset);
             if (response && response.data) {
                 setAllAssets(response.data);
             }
@@ -66,26 +66,32 @@ const AllottedAssetsTable = () => {
             </div>
 
             <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
-                <div className="col-span-2 flex items-center">
+                <div className="col-span-1 flex items-center">
                     <p className="font-medium">Title</p>
                 </div>
                 <div className="col-span-2 flex items-center">
                     <p className="font-medium">Description</p>
                 </div>
+                <div className="col-span-1 flex items-center">
+                    <p className="font-medium">Alloted To</p>
+                </div>
                 <div className="col-span-2 flex items-center">
                     <p className="font-medium">Assets tag</p>
                 </div>
-                <div className="col-span-2 flex items-center">
+                <div className="col-span-1 flex items-center">
                     <p className="font-medium">Company</p>
                 </div>
             </div>
             {allAssets.map((asset, index) => (
-                <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
-                    <div className="col-span-2 flex items-center">
+                <div key={asset.assetId} className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
+                    <div className="col-span-1 flex items-center">
                         <p className="text-sm text-black dark:text-white">{asset.title}</p>
                     </div>
                     <div className="col-span-2 flex items-center">
                         <p className="text-sm text-black dark:text-white">{asset.description}</p>
+                    </div>
+                    <div className="col-span-1 flex items-center">
+                        <p className="text-sm text-black dark:text-white">{asset.firstName} {asset.lastName}</p>
                     </div>
                     <div className="col-span-2 flex items-center">
                         <p className="text-sm text-black dark:text-white">{asset.assetId}</p>

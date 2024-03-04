@@ -14,7 +14,9 @@ export const APIS = {
     addAsset: `${BaseURL}manager/add-asset-data`,
     getAllUsers: `${BaseURL}manager/get-all-users`,
     getAllAsset: `${BaseURL}manager/get-all-assets`,
+    getAllAssetNotAlloted: `${BaseURL}manager/get-all-assets-not-alloted`,
     allotAsset: `${BaseURL}manager/allot-asset`,
+    getAllAllottedAsset: `${BaseURL}manager/get-all-alloted-assets`,
     // ATTENDANCE
     markAttendance: `${BaseURL}attendence/insert-attendence`,
     getClockInTime: `${BaseURL}attendence/get-clock-in-time/:user_id`,

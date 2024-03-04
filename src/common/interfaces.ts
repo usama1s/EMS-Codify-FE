@@ -86,6 +86,16 @@ export interface AssetTableData {
     pictures: []
 }
 
+export interface AllotedAssetTableData {
+    firstName:string,
+    lastName:string,
+    assetId: number,
+    title: string,
+    description: string,
+    company: string,
+    pictures: []
+}
+
 export interface Coordinates {
     latitude: number;
     longitude: number;
@@ -260,7 +270,7 @@ export interface AssetData {
 export interface AssetAllotData {
     userId: number;
     assetId: number;
-    pictures: File[];
+    pictures: any;
 }
 
 

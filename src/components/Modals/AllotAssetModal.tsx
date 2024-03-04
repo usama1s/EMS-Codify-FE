@@ -35,7 +35,7 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
 
     const fetchAssetsData = async () => {
         try {
-            const response = await axios.get(APIS.getAllAsset);
+            const response = await axios.get(APIS.getAllAssetNotAlloted);
             if (response && response.data) {
                 setAssets(response.data);
             }
@@ -46,6 +46,10 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        // let form = e.target as HTMLFormElement;
+        // let formData = new FormData(form)
+        // let formObj = Object.fromEntries(formData.entries())
+        // console.log(formObj)
 
         const data: AssetAllotData = {
             userId: selectedUsers ? parseInt(selectedUsers) : 0, // Convert selectedUsers to number
@@ -56,11 +60,12 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
         try {
             const response = await axios.post(APIS.allotAsset, data);
             onClose();
-            alert(response.data.message); 
+            alert(response.data.message);
         } catch (error) {
             console.error('Error allotting asset:', error);
         }
     };
+
 
 
     const handleUserChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -129,7 +134,7 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                                     >
                                         <option value="" disabled>Select Employee</option>
                                         {users && users.map(user => (
-                                            <option value={user.user_id}>
+                                            <option key={user.user_id} value={user.user_id}>
                                                 {user.first_name} {user.last_name}
                                             </option>
                                         ))}
@@ -146,7 +151,7 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                                     >
                                         <option value="" disabled>Select Asset</option>
                                         {assets && assets.map((asset) => (
-                                            <option value={asset.assetId}>
+                                            <option key={asset.assetId} value={asset.assetId}>
                                                 {asset.title}
                                             </option>
                                         ))}
