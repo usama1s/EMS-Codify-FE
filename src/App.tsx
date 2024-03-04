@@ -77,6 +77,10 @@ function App() {
             path='/asset-management'
             element={<ProtectedRoute Component={AssetManagement} />}
           />
+          <Route
+            path='/office-decorum'
+            element={<ProtectedRoute Component={AssetManagement} />}
+          />
         </Route>
       </Routes >
     </>

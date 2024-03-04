@@ -31,7 +31,21 @@ const AddAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+    
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+        const files = fileInput.files;
+    
+        if (!files) {
+            // Handle case where files are not selected
+            return;
+        }
+    
+        if (files.length > 7) {
+            // Handle case where more than 7 files are selected
+            console.error("Maximum 7 files allowed.");
+            return;
+        }
+    
         const data: AssetData = {
             userId: userId ?? 0,
             title: formData.title,
@@ -39,21 +53,29 @@ const AddAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
             company: formData.company,
             pictures: [],
         };
-
-        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-        if (fileInput && fileInput.files) {
-            for (let i = 0; i < fileInput.files.length; i++) {
-                const file = fileInput.files[i];
-                const base64: any = await convertToBase64(file);
-                data.pictures.push(base64);
+    
+        // Regular expression to check if file type is JPEG
+        const jpegRegex = /^image\/jpeg$/;
+    
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+    
+            // Check if file type is JPEG
+            if (!jpegRegex.test(file.type)) {
+                console.error(`File ${file.name} is not a JPEG.`);
+                continue;
             }
+    
+            // Convert file to base64
+            const base64: any = await convertToBase64(file);
+            data.pictures.push(base64);
         }
-
+    
         // console.log(data);
-
-
+    
         await addAsset(data);
     };
+    
 
     const convertToBase64 = (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {

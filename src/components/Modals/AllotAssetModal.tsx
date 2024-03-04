@@ -46,11 +46,7 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // let form = e.target as HTMLFormElement;
-        // let formData = new FormData(form)
-        // let formObj = Object.fromEntries(formData.entries())
-        // console.log(formObj)
-
+    
         const data: AssetAllotData = {
             userId: selectedUsers ? parseInt(selectedUsers) : 0, // Convert selectedUsers to number
             assetId: selectedAssets ? parseInt(selectedAssets) : 0, // Convert selectedAssets to number
@@ -80,14 +76,30 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
         if (event.target.files) {
             const files = Array.from(event.target.files);
             const base64Array: string[] = [];
-
+    
+            if (files.length > 2) {
+                console.error("Maximum 2 files allowed.");
+                return;
+            }
+    
+            // Regular expression to check if file type is JPEG
+            const jpegRegex = /^image\/jpeg$/;
+    
             const readFile = (index: number) => {
                 if (index >= files.length) {
                     setPictures(prevPictures => [...prevPictures, ...base64Array]);
                     return;
                 }
-
+    
                 const file = files[index];
+    
+                // Check if file type is JPEG
+                if (!jpegRegex.test(file.type)) {
+                    console.error(`File ${file.name} is not a JPEG.`);
+                    readFile(index + 1);
+                    return;
+                }
+    
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = () => {
@@ -101,10 +113,11 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                     readFile(index + 1);
                 };
             };
-
+    
             readFile(0);
         }
     };
+    
 
 
     const handleClose = () => {
