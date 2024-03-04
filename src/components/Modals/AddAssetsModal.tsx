@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { selectManager } from "../../redux/store/slices/managerSlice";
 import { AssetData, RegisterModalProps, UserData } from "../../common/interfaces";
 import axios from "axios";
 import { APIS } from "../../apis";
@@ -14,10 +12,12 @@ const AddAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
     const userDataString = localStorage.getItem('userData');
     const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
     const userId: number | null = userData ? userData.user_id : null;
-
-
-    const initialFormData = useSelector(selectManager);
-    const [formData, setFormData] = useState(initialFormData);
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        company: '',
+        adding_date: ''
+    });
 
     const addAsset = async (data: any) => {
         try {
@@ -31,51 +31,52 @@ const AddAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-    
-        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+
+        const fileInput = e.currentTarget.querySelector('input[type="file"]') as HTMLInputElement;
         const files = fileInput.files;
-    
+
         if (!files) {
             // Handle case where files are not selected
             return;
         }
-    
+
         if (files.length > 7) {
             // Handle case where more than 7 files are selected
             console.error("Maximum 7 files allowed.");
             return;
         }
-    
+
         const data: AssetData = {
             userId: userId ?? 0,
             title: formData.title,
             description: formData.description,
             company: formData.company,
+            date: formData.adding_date,
             pictures: [],
         };
-    
+
         // Regular expression to check if file type is JPEG
         const jpegRegex = /^image\/jpeg$/;
-    
+
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-    
+
             // Check if file type is JPEG
             if (!jpegRegex.test(file.type)) {
                 console.error(`File ${file.name} is not a JPEG.`);
                 continue;
             }
-    
+
             // Convert file to base64
             const base64: any = await convertToBase64(file);
             data.pictures.push(base64);
         }
-    
+
         // console.log(data);
-    
+
         await addAsset(data);
     };
-    
+
 
     const convertToBase64 = (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
@@ -125,10 +126,23 @@ const AddAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                                         />
                                     </div>
                                 ))}
+                                <div className="d-flex">
+                                    <div className="d-flex">
+                                        <label className="mb-2 block text-black dark:text-white">Asset Description</label>
+                                        <textarea
+                                            name="description"
+                                            placeholder="Add Asset Description"
+                                            value={formData.description} 
+                                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                            onChange={(e) => handleChange("description", e.target.value)} 
+                                        />
+
+                                    </div>
+                                </div>
 
                                 <div className="d-flex">
                                     <div className="d-flex">
-                                        <label className="mb-2 block text-black dark:text-white">Upload assets pictures</label>
+                                        <label className="mb-2 block text-black dark:text-white">Upload assets pictures ( maximum 7 pictures )</label>
                                         <input multiple
                                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                             type="file" />

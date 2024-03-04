@@ -132,12 +132,6 @@ export const leaveOptions = [
 
 export const EMPLOYEE_CONTRACT_FIELDS = [
   {
-    name: 'reporting_manager',
-    type: 'text',
-    placeholder: 'reporting manager',
-    label: 'Reporting Manager',
-  },
-  {
     name: 'contract_start_date',
     type: 'date',
     placeholder: '22-Jan-2022',
@@ -163,18 +157,18 @@ export const ADD_ASSET_FIELDS = [
     name: 'title',
     type: 'text',
     placeholder: 'Enter assets title',
-    label: 'Title',
-  },
-  {
-    name: 'description',
-    type: 'text',
-    placeholder: 'Enter assets descriptions (OPTIONAL)',
-    label: 'Description',
+    label: 'Asset Title',
   },
   {
     name: 'company',
     type: 'text',
     placeholder: 'Enter company name',
-    label: 'Company',
+    label: 'Asset Company',
+  },
+  {
+    name: 'adding_date',
+    type: 'date',
+    placeholder: 'Enter company name',
+    label: 'Adding Date',
   }
 ];

@@ -4,7 +4,6 @@ import PrimaryButton from '../UI/PrimaryButton';
 import axios from 'axios';
 import { APIS } from '../../apis';
 import './filter-all.css';
-import AddAssetsModal from '../Modals/AddAssetsModal';
 import AssetDetailModal from '../Modals/AssetDetailModal';
 import AllotAssetsModal from '../Modals/AllotAssetModal';
 

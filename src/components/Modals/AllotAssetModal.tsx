@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AssetAllotData, RegisterModalProps, UserData } from "../../common/interfaces";
+import { RegisterModalProps, UserData } from "../../common/interfaces";
 import axios from "axios";
 import { APIS } from "../../apis";
 
@@ -16,6 +16,11 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
     const [assets, setAssets] = useState<Assets[]>([]); // Initialize with an empty array
     const [selectedAssets, setSelectedAssets] = useState<string>('');
     const [pictures, setPictures] = useState<string[]>([]);
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        project_date: '',
+    });
 
     useEffect(() => {
         fetchUsersData();
@@ -46,12 +51,16 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-    
-        const data: AssetAllotData = {
-            userId: selectedUsers ? parseInt(selectedUsers) : 0, // Convert selectedUsers to number
-            assetId: selectedAssets ? parseInt(selectedAssets) : 0, // Convert selectedAssets to number
+
+        const data = {
+            userId: selectedUsers ? parseInt(selectedUsers) : 0,
+            assetId: selectedAssets ? parseInt(selectedAssets) : 0,
+            title: formData.title,
+            date: formData.project_date,
+            description: formData.description,
             pictures: pictures,
         };
+        // console.log(data)
 
         try {
             const response = await axios.post(APIS.allotAsset, data);
@@ -62,7 +71,9 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
         }
     };
 
-
+    const handleChange = (name: string, value: string) => {
+        setFormData({ ...formData, [name]: value });
+    };
 
     const handleUserChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedUsers(event.target.value);
@@ -76,30 +87,30 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
         if (event.target.files) {
             const files = Array.from(event.target.files);
             const base64Array: string[] = [];
-    
+
             if (files.length > 2) {
                 console.error("Maximum 2 files allowed.");
                 return;
             }
-    
+
             // Regular expression to check if file type is JPEG
             const jpegRegex = /^image\/jpeg$/;
-    
+
             const readFile = (index: number) => {
                 if (index >= files.length) {
                     setPictures(prevPictures => [...prevPictures, ...base64Array]);
                     return;
                 }
-    
+
                 const file = files[index];
-    
+
                 // Check if file type is JPEG
                 if (!jpegRegex.test(file.type)) {
                     console.error(`File ${file.name} is not a JPEG.`);
                     readFile(index + 1);
                     return;
                 }
-    
+
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = () => {
@@ -113,11 +124,11 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                     readFile(index + 1);
                 };
             };
-    
+
             readFile(0);
         }
     };
-    
+
 
 
     const handleClose = () => {
@@ -136,6 +147,41 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                         </div>
                         <div className="relative bg-black p-6 flex-auto">
                             <form onSubmit={handleSubmit}>
+                                <div className="d-flex">
+                                    <div className="mb-5">
+                                        <label className="mb-2 block text-black dark:text-white">Project Title</label>
+                                        <input
+                                            name="title"
+                                            type="text"
+                                            placeholder="Enter Title"
+                                            value={formData.title}
+                                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                            onChange={(e) => handleChange("title", e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="mb-5">
+                                        <label className="mb-2 block text-black dark:text-white">Project Description</label>
+                                        <textarea
+                                            name="description"
+                                            placeholder="Add Asset Description"
+                                            value={formData.description}
+                                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                            onChange={(e) => handleChange("description", e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="mb-5">
+                                        <label className="mb-2 block text-black dark:text-white">Date</label>
+                                        <input
+                                            name="project_date"
+                                            type="date"
+                                            placeholder="Enter Date"
+                                            value={formData.project_date}
+                                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                            onChange={(e) => handleChange("project_date", e.target.value)}
+                                        />
+                                    </div>
+
+                                </div>
                                 <div className="mb-5">
                                     <label className="mb-2 block text-black dark:text-white">Select Employee</label>
                                     <select
@@ -171,7 +217,7 @@ const AllotAssetsModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                                     </select>
                                 </div>
                                 <div className="mb-5">
-                                    <label className="mb-2 block text-black dark:text-white">Upload Asset Pictures</label>
+                                    <label className="mb-2 block text-black dark:text-white">Upload Asset Pictures ( maximum 2 pictures )</label>
                                     <input
                                         multiple
                                         className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"

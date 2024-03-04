@@ -264,6 +264,7 @@ export interface AssetData {
     title: string;
     description: string;
     company: string,
+    date:string
     pictures: File[];
 }
 

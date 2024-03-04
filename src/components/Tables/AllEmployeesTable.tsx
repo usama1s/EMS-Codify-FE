@@ -3,6 +3,8 @@ import { ManagersTableProps } from "../../common/interfaces";
 import React, { useState } from 'react';
 import RegisterEmployeeModal from "../Modals/RegisterEmployeeModal";
 import EmployeeDetailModal from "../Modals/EmployeeDetailModal";
+import PrimaryButton from "../UI/PrimaryButton";
+import CreateEmployeeContractModal from "../Modals/CreateEmployeeContractModal";
 
 
 
@@ -10,6 +12,7 @@ const AllEmployeeTable: React.FC<ManagersTableProps> = ({ data }) => {
 
     const [showModal, setShowModal] = useState(false)
     const [showRegisterModal, setShowRegisterModal] = useState(false)
+    const [showContractModal, setShowContactModal] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(null);
 
     const viewModal = (index: any) => {
@@ -27,6 +30,12 @@ const AllEmployeeTable: React.FC<ManagersTableProps> = ({ data }) => {
     const openRegisterModal = () => {
         setShowRegisterModal(true)
     }
+    const openContractModal = () => {
+        setShowContactModal(true)
+    }
+    const closeContractModal = () => {
+        setShowContactModal(false)
+    }
 
 
 
@@ -36,9 +45,10 @@ const AllEmployeeTable: React.FC<ManagersTableProps> = ({ data }) => {
                 <h4 className="text-xl font-semibold text-black dark:text-white">
                     Registered Employees List
                 </h4>
-                <button className="inline-flex items-center justify-center gap-2.5 rounded-md bg-primary py-2 px-8 text-center text-sm font-medium text-white hover:bg-opacity-90 lg:px-2 xl:px-2 " onClick={openRegisterModal} >
-                    Register Employee
-                </button>
+                <div className="flex gap-6">
+                    <PrimaryButton onClick={openContractModal}>Create Employee Contract</PrimaryButton>
+                    <PrimaryButton onClick={openRegisterModal}>Register Employee</PrimaryButton>
+                </div>
             </div>
 
             <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
@@ -75,7 +85,7 @@ const AllEmployeeTable: React.FC<ManagersTableProps> = ({ data }) => {
                     <div className="col-span-1 flex items-center">
 
                         <div className="h-10 w-10 bg-blue-800 text-white ml-10" onClick={() => viewModal(index)}>
-                            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 35 35" id="view">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" id="view">
                                 <path d="M33.5,17.5c-4.4-6-10.2-9-16-9c-5.8,0-11.6,3-16,9C10.3,29.5,24.7,29.5,33.5,17.5z M12.3,12.5c-0.5,0.9-0.8,1.9-0.8,3
                            c0,3.3,2.7,6,6,6s6-2.7,6-6c0-1.1-0.3-2.1-0.8-3c2.5,1,4.9,2.7,7,5c-3.5,3.9-7.7,6-12.1,6c-4.4,0-8.7-2.1-12.2-6
                               C7.4,15.2,9.8,13.5,12.3,12.5z" fill="white"></path>
@@ -98,6 +108,10 @@ const AllEmployeeTable: React.FC<ManagersTableProps> = ({ data }) => {
             ) : null}
             {showRegisterModal ? (
                 <RegisterEmployeeModal onClose={closeRegisterModal} />
+            ) : null}
+
+            {showContractModal ? (
+                <CreateEmployeeContractModal onClose={closeContractModal} />
             ) : null}
 
         </div>
