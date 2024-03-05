@@ -1,19 +1,40 @@
-import { ManagersTableProps } from "../../common/interfaces";
+import { EmployeeInterface } from "../../common/interfaces";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import RegisterEmployeeModal from "../Modals/RegisterEmployeeModal";
 import EmployeeDetailModal from "../Modals/EmployeeDetailModal";
 import PrimaryButton from "../UI/PrimaryButton";
 import CreateEmployeeContractModal from "../Modals/CreateEmployeeContractModal";
+import axios from "axios";
+import { APIS } from "../../apis";
 
 
 
-const AllEmployeeTable: React.FC<ManagersTableProps> = ({ data }) => {
+const AllEmployeeTable: React.FC = () => {
 
     const [showModal, setShowModal] = useState(false)
     const [showRegisterModal, setShowRegisterModal] = useState(false)
     const [showContractModal, setShowContactModal] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(null);
+
+
+    const [AllEmployee, setAllEmployee] = useState<EmployeeInterface[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(APIS.getAllEmployees);
+                if (response && response.data) {
+                    setAllEmployee(response.data);
+                }
+
+            } catch (error) {
+                console.error('Error fetching attendance data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const viewModal = (index: any) => {
         setCurrentIndex(index);
@@ -68,7 +89,7 @@ const AllEmployeeTable: React.FC<ManagersTableProps> = ({ data }) => {
                     <p className="font-medium">Employee Detail</p>
                 </div>
             </div>
-            {data.map((employee, index) => (
+            {AllEmployee.map((employee, index) => (
                 <div key={index} className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
                     <div className="col-span-1 flex items-center">
                         <p className="text-sm text-black dark:text-white">{employee.first_name} {employee.last_name}</p>
@@ -98,12 +119,13 @@ const AllEmployeeTable: React.FC<ManagersTableProps> = ({ data }) => {
             {showModal && currentIndex !== null ? (
                 <EmployeeDetailModal
                     onClose={handleClose}
-                    first_name={data[currentIndex].first_name}
-                    last_name={data[currentIndex].last_name}
-                    email={data[currentIndex].email}
-                    designation={data[currentIndex].designation}
-                    user_type={data[currentIndex].user_type}
-                    dateOfJoining={data[currentIndex].dateOfJoining}
+                    user_id={AllEmployee[currentIndex].user_id}
+                    first_name={AllEmployee[currentIndex].first_name}
+                    last_name={AllEmployee[currentIndex].last_name}
+                    email={AllEmployee[currentIndex].email}
+                    designation={AllEmployee[currentIndex].designation}
+                    user_type={AllEmployee[currentIndex].user_type}
+                    dateOfJoining={AllEmployee[currentIndex].dateOfJoining}
                 />
             ) : null}
             {showRegisterModal ? (

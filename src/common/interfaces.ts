@@ -12,6 +12,20 @@ export interface UserData {
 }
 
 export interface ManagerInterface {
+    user_id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    confirm_password: string;
+    user_type: number;
+    roles: number[];
+    designation: string;
+    dateOfJoining: string;
+}
+
+export interface EmployeeInterface {
+    user_id: number;
     first_name: string;
     last_name: string;
     email: string;
@@ -87,8 +101,8 @@ export interface AssetTableData {
 }
 
 export interface AllotedAssetTableData {
-    firstName:string,
-    lastName:string,
+    firstName: string,
+    lastName: string,
     assetId: number,
     title: string,
     description: string,
@@ -173,6 +187,7 @@ export interface ManagersModalProps {
 
 export interface EmployeeDetailModalProps {
     onClose: () => void;
+    user_id: number;
     first_name: string;
     last_name: string;
     email: string;
@@ -200,6 +215,7 @@ export interface TableTwoProps {
     data: AttendanceData[];
 }
 export interface ManagersTableProps {
+    user_id: number;
     data: ManagerInterface[];
 }
 
@@ -224,6 +240,10 @@ export interface EmployeeProgressModalInterface {
 
 export interface MessegeModalProps {
     displayText: string;
+    onClose: () => void;
+    otherFunction: () => void;
+}
+export interface ContratStatusModalProps {
     onClose: () => void;
     otherFunction: () => void;
 }
@@ -264,7 +284,7 @@ export interface AssetData {
     title: string;
     description: string;
     company: string,
-    date:string
+    date: string
     pictures: File[];
 }
 
@@ -272,6 +292,18 @@ export interface AssetAllotData {
     userId: number;
     assetId: number;
     pictures: any;
+}
+
+export interface ContractsInterface {
+    map(arg0: (contract: any, index: any) => import("react/jsx-runtime").JSX.Element): import("react").ReactNode;
+    contractId: number;
+    user_id: number;
+    reportingManager: number;
+    contractStartDate: string;
+    contractEndDate: string;
+    pay: number;
+    pdf: string;
+    contractStatus: number;
 }
 
 

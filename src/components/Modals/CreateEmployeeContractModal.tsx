@@ -3,6 +3,7 @@ import { RegisterModalProps, UserData } from "../../common/interfaces";
 import axios from "axios";
 import { APIS } from "../../apis";
 import { EMPLOYEE_CONTRACT_FIELDS } from "../../constants/constants";
+import MessegeModal from "./MessageModal";
 
 
 const CreateEmployeeContractModal: React.FC<RegisterModalProps> = ({ onClose }) => {
@@ -16,7 +17,8 @@ const CreateEmployeeContractModal: React.FC<RegisterModalProps> = ({ onClose }) 
     const [managers, setManagers] = useState<UserData[] | null>(null);
     const [selectedManager, setSelectedManager] = useState<string>('');
     const [pdfBase64, setPdfBase64] = useState<string | null>(null);
-
+    const [showMessageModal, setShowMessageModal] = useState(false);
+    const [message, setMessege] = useState("");
 
 
     useEffect(() => {
@@ -26,7 +28,7 @@ const CreateEmployeeContractModal: React.FC<RegisterModalProps> = ({ onClose }) 
 
     const fetchEmployeesData = async () => {
         try {
-            const response = await axios.get(APIS.getAllEmployees);
+            const response = await axios.get(APIS.getAllEmployeeWithoutActiveContract);
             if (response && response.data) {
                 setEmployees(response.data);
             }
@@ -34,6 +36,7 @@ const CreateEmployeeContractModal: React.FC<RegisterModalProps> = ({ onClose }) 
             console.error('Error fetching users data:', error);
         }
     };
+
     const fetchManagersData = async () => {
         try {
             const response = await axios.get(APIS.getAllManagers);
@@ -45,13 +48,14 @@ const CreateEmployeeContractModal: React.FC<RegisterModalProps> = ({ onClose }) 
         }
     };
 
-
-
     const createContract = async (data: any) => {
         try {
             const response = await axios.post(APIS.createContact, data);
-            onClose();
-            return alert(response.data.message);
+            if (response && response.data.message) {
+                setMessege(response.data.message)
+                setShowMessageModal(true)
+            }
+            // return alert(response.data.message);
         } catch (error) {
             throw error;
         }
@@ -67,11 +71,9 @@ const CreateEmployeeContractModal: React.FC<RegisterModalProps> = ({ onClose }) 
             pay: formData.pay,
             pdf: pdfBase64,
         }
-        console.log(data);
+        // console.log(data);
         createContract(data);
     };
-
-
 
     const handleChange = (field: string, value: string) => {
         setFormData((prevFormData: any) => ({ ...prevFormData, [field]: value }));
@@ -91,8 +93,7 @@ const CreateEmployeeContractModal: React.FC<RegisterModalProps> = ({ onClose }) 
         setSelectedManager(event.target.value);
     };
 
-
-    const handlePdfFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handlePdfFileChange = (event: any) => {
         if (event.target.files && event.target.files.length > 0) {
             // Ensure only one file is selected
             if (event.target.files.length > 1) {
@@ -110,13 +111,19 @@ const CreateEmployeeContractModal: React.FC<RegisterModalProps> = ({ onClose }) 
             const reader = new FileReader();
             reader.onload = (event) => {
                 if (event.target && event.target.result) {
-                    const base64String = event.target.result.toString().split(",")[1];
+                    const base64String = event.target.result.toString();
+                    // Send the base64 string with the extension
                     setPdfBase64(base64String);
                 }
             };
             reader.readAsDataURL(file);
         }
     };
+    
+    const closeMessegeModal = () => {
+        setShowMessageModal(false)
+    };
+
 
     return (
         <>
@@ -205,7 +212,9 @@ const CreateEmployeeContractModal: React.FC<RegisterModalProps> = ({ onClose }) 
                     </div>
                 </div>
             </div>
-
+            {showMessageModal ?
+                <MessegeModal displayText={message} onClose={closeMessegeModal} otherFunction={onClose} /> : null
+            }
 
         </>
     );

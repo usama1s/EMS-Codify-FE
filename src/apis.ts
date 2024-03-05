@@ -9,6 +9,8 @@ export const APIS = {
     getAllManagers: `${BaseURL}admin/get-all-managers`,
     // MANAGER
     getAllEmployees: `${BaseURL}manager/get-all-employees`,
+    getAllEmployeeWithoutActiveContract: `${BaseURL}manager/get-all-employees-without-active-contract`,
+    getAllUserContracts: `${BaseURL}manager/get-all-contract-by-userid`,
     registerEmployee: `${BaseURL}manager/register-employee`,
     getAllEmployeesAttendence: `${BaseURL}manager/get-all-employees-attendance/:year/:month`,
     addAsset: `${BaseURL}manager/add-asset-data`,
