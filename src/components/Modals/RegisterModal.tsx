@@ -71,6 +71,7 @@ const inputFields = [
 const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
     const initialFormData = useSelector(selectManager);
     const [formData, setFormData] = useState(initialFormData);
+    const [isEmployee, setIsEmployee] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
 
     const userDataString = localStorage.getItem('userData');
@@ -87,23 +88,25 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
             throw error;
         }
     };
-
+    const handleCheckbox = () => {
+        setIsEmployee(!isEmployee);
+        setFormData({
+            ...formData,
+            isEmployee: !isEmployee,
+            user_type: !isEmployee ? 23 : 2 
+        });
+    };
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Check if password and confirm password match
         if (formData.password !== formData.confirm_password) {
             alert("Password and Confirm Password do not match!");
             return;
         }
 
-        // Map selected roles to their corresponding numbers
         const selectedRoleValues = selectedRoles.map(role => roleValues[role]);
 
-        // Update formData.roles with the selectedRoleValues array
         formData.roles = selectedRoleValues;
-
-        console.log(formData);
 
         registerManager(formData);
     };
@@ -167,6 +170,19 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
                                         ))}
                                     </div>
                                 )}
+                                <div className="mb-4.5">
+                                    <label className="mb-3 block text-black dark:text-white">Is Employee</label>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            value=''
+                                            className="mb-3 ml-4"
+                                            checked={isEmployee}
+                                            onChange={handleCheckbox}
+                                        />
+                                        Check the box if this manager is an employee
+                                    </label>
+                                </div>
                                 <div className="flex items-center bg-black justify-end p-2 border-t border-solid border-blueGray-200 rounded-b">
                                     <button
                                         className="text-white background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"

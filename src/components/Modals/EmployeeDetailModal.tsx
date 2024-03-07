@@ -8,8 +8,10 @@ import ContractStatusModal from "./ContractStatusModal";
 
 const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({ onClose, user_id, first_name, last_name, email, dateOfJoining, designation }) => {
 
-    const [contracts, setContracts] = useState<ContractsInterface>()
+    const [contracts, setContracts] = useState<ContractsInterface[] | undefined>()
     const [showContractModal, setShowContactModal] = useState(false)
+    const [currentIndex, setCurrentIndex] = useState(null);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -32,7 +34,8 @@ const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({ onClose, user
         onClose()
     };
 
-    const openModalFromStatusChange = async () => {
+    const openModalFromStatusChange = async (index: any) => {
+        setCurrentIndex(index)
         setShowContactModal(true)
     };
     const closeModalFromStatusChange = async () => {
@@ -112,7 +115,7 @@ const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({ onClose, user
                                                 <button onClick={() => viewPdf(contract.pdf)}>View PDF</button>
                                             </td>
                                             <td>
-                                                <PrimaryButton onClick={openModalFromStatusChange}>Change Status</PrimaryButton>
+                                                <PrimaryButton onClick={() => openModalFromStatusChange(index)}>Change Status</PrimaryButton>
                                             </td>
                                         </tr>
                                     ))}
@@ -136,9 +139,10 @@ const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({ onClose, user
             </div>
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
 
-            {showContractModal ?
-                <ContractStatusModal onClose={closeModalFromStatusChange} otherFunction={onClose} /> : null
-            }
+            {showContractModal && currentIndex !== null && contracts ? (
+                <ContractStatusModal onClose={closeModalFromStatusChange} otherFunction={onClose} contractId={contracts[currentIndex]?.contractId} />
+            ) : null}
+
 
         </>
     );

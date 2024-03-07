@@ -3,15 +3,48 @@ import React from "react";
 import { ContratStatusModalProps } from "../../common/interfaces";
 import PrimaryButton from "../UI/PrimaryButton";
 import DangerButton from "../UI/DangerButton";
+import axios from "axios";
+import { APIS } from "../../apis";
 
-const ContractStatusModal: React.FC<ContratStatusModalProps> = ({ onClose, otherFunction }) => {
+const ContractStatusModal: React.FC<ContratStatusModalProps> = ({ contractId, onClose, otherFunction }) => {
 
     const handleClose = async () => {
         onClose()
 
-        //Made For Attendance modal to close
+
         otherFunction()
     };
+    const handleExpire = async () => {
+        try {
+            let status = 3
+            const response = await axios.put(APIS.changeContactStatus, { contractId, status });
+            if (response && response.data.message) {
+                console.log(response.data.message)
+                onClose()
+            }
+
+        } catch (error) {
+            console.error('Error fetching attendance data:', error);
+        }
+
+    };
+    const handleTerminate = async () => {
+        try {
+            let status = 2
+            const response = await axios.put(APIS.changeContactStatus, { contractId, status });
+            if (response && response.data.message) {
+                console.log(response.data.message)
+                onClose()
+
+            }
+
+        } catch (error) {
+            console.error('Error fetching attendance data:', error);
+        }
+    };
+
+
+
 
     return (
         <>
@@ -26,8 +59,8 @@ const ContractStatusModal: React.FC<ContratStatusModalProps> = ({ onClose, other
 
                         <div className="relative p-6 flex-auto bg-black">
                             <div className="ml-10 flex gap-20">
-                                <PrimaryButton onClick={handleClose}>Expired</PrimaryButton>
-                                <DangerButton onClick={handleClose}>Terminate</DangerButton>
+                                <PrimaryButton onClick={handleExpire}>Expired</PrimaryButton>
+                                <DangerButton onClick={handleTerminate}>Terminate</DangerButton>
                             </div>
 
                         </div>

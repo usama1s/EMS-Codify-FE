@@ -13,7 +13,9 @@ const initialState: ManagerInterface = {
   user_type: 2,
   roles: [],
   designation: '',
-  dateOfJoining: '',
+  date_of_joining: '',
+  user_id: 0,
+  isEmployee: false
 };
 
 

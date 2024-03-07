@@ -21,7 +21,8 @@ export interface ManagerInterface {
     user_type: number;
     roles: number[];
     designation: string;
-    dateOfJoining: string;
+    date_of_joining: string;
+    isEmployee:boolean
 }
 
 export interface EmployeeInterface {
@@ -216,7 +217,6 @@ export interface TableTwoProps {
 }
 export interface ManagersTableProps {
     user_id: number;
-    data: ManagerInterface[];
 }
 
 export interface AttendanceTableProps {
@@ -244,6 +244,7 @@ export interface MessegeModalProps {
     otherFunction: () => void;
 }
 export interface ContratStatusModalProps {
+    contractId: number;
     onClose: () => void;
     otherFunction: () => void;
 }
@@ -296,7 +297,7 @@ export interface AssetAllotData {
 
 export interface ContractsInterface {
     map(arg0: (contract: any, index: any) => import("react/jsx-runtime").JSX.Element): import("react").ReactNode;
-    contractId: number;
+    contractId: any;
     user_id: number;
     reportingManager: number;
     contractStartDate: string;
