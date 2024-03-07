@@ -1,14 +1,14 @@
 import React from 'react';
 import Breadcrumb from '../components/Breadcrumb';
-import AllLeavesTable from '../components/Tables/AllLeavesTable';
+import PayScheduleTable from '../components/Tables/PayScheduleTable';
 
 const PaySchedule: React.FC = () => {
     return (
         <>
-            <Breadcrumb pageName="All Leaves" />
+            <Breadcrumb pageName="Payments" />
 
-            <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark" style={{ height: '700px' }}>
-                <AllLeavesTable />
+            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark" style={{ height: '700px' }}>
+                <PayScheduleTable />
             </div>
         </>
     );

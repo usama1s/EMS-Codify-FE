@@ -6,13 +6,13 @@ import DangerButton from "../UI/DangerButton";
 import axios from "axios";
 import { APIS } from "../../apis";
 
-const ContractStatusModal: React.FC<ContratStatusModalProps> = ({ contractId, onClose, otherFunction }) => {
+const ContractStatusModal: React.FC<ContratStatusModalProps> = ({ contractId, onClose }) => {
 
     const handleClose = async () => {
         onClose()
 
 
-        otherFunction()
+        // otherFunction()
     };
     const handleExpire = async () => {
         try {
