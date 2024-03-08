@@ -1,28 +1,71 @@
 
-import React from "react";
-import { DashboardModalProps } from "../../common/interfaces";
-import PrimaryButton from "../UI/PrimaryButton";
+import React, { useState } from "react";
+import { PayModalProps } from "../../common/interfaces";
 import DangerButton from "../UI/DangerButton";
+import axios from "axios";
+import { APIS } from "../../apis";
+import PrimaryButton from "../UI/PrimaryButton";
 
-const PayModal: React.FC = ({onClose}) => {
+const PayModal: React.FC<PayModalProps> = ({ onClose, fullName, amount, month, tax, totalPaid, bonus, userId ,year}) => {
+    const [pdfBase64, setPdfBase64] = useState<string | null>(null);
+
 
     const handleClose = async () => {
         onClose()
     };
+    const handlePayNow = async () => {
 
-
-    const decodeBase64Image = (base64String: string) => {
-        const decodedString = atob(base64String);
-        const byteNumbers = new Array(decodedString.length);
-        for (let i = 0; i < decodedString.length; i++) {
-            byteNumbers[i] = decodedString.charCodeAt(i);
+        const salaryDetail = {
+            fullName,
+            amount,
+            month,
+            year,
+            tax,
+            totalPaid,
+            bonus,
+            userId,
+            pdfBase64
         }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'image/jpeg' });
-        const dataUrl = URL.createObjectURL(blob);
-        return dataUrl;
+        console.log(salaryDetail);
+
+        try {
+            const response = await axios.post(APIS.paySalary, salaryDetail);
+            if (response) {
+                onClose()
+            }
+        } catch (error) {
+            console.error('Error fetching users data:', error);
+        }
+
+
     };
 
+    const handlePdfFileChange = (event: any) => {
+        if (event.target.files && event.target.files.length > 0) {
+            // Ensure only one file is selected
+            if (event.target.files.length > 1) {
+                console.error("Please select only one file.");
+                return;
+            }
+
+            const file = event.target.files[0];
+            // Ensure file type is PDF
+            if (file.type !== "application/pdf") {
+                console.error("Please select a PDF file.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                if (event.target && event.target.result) {
+                    const base64String = event.target.result.toString();
+                    // Send the base64 string with the extension
+                    setPdfBase64(base64String);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     return (
         <>
@@ -34,42 +77,54 @@ const PayModal: React.FC = ({onClose}) => {
                             <h3 className="text-2xl font-semibold text-white ">Pay Amount</h3>
                         </div>
 
-                        <div className="relative p-6 flex-auto bg-black">
-
-                            <div className="flex justify-between">
-                                <h2 className="font-extrabold">Name</h2>
-                                <p className="text-sm text-black dark:text-white">Anoosh</p>
-                            </div>
-
-                            <div className="mt-5 flex items-center justify-between">
-                                <p className="font-extrabold ">Date</p>
-                                {/* <p className="text-sm text-black dark:text-white">{date}</p> */}
-
-                            </div>
+                        <div className="relative p-3 flex-auto bg-black">
                             <div className="mt-5  items-center justify-between">
-                                <h2 className="font-extrabold">Clock In</h2>
+                                <h2 className="font-extrabold">Salary Detail</h2>
                                 <div className="mt-3 flex justify-between">
-                                    <p className=" ml-5 text-sm text-black dark:text-white">time:</p>
-                                    {/* <p className="text-sm text-black dark:text-white">{clockin}</p> */}
+                                    <p className=" ml-5 text-sm text-black dark:text-white">Full name:</p>
+                                    <p className="text-sm text-black dark:text-white">{fullName}</p>
                                 </div>
                                 <div className="mt-3 flex justify-between">
-                                    <p className="ml-5 text-sm text-black dark:text-white">location:</p>
-                                    <p className="text-sm text-black dark:text-white">location</p>
+                                    <p className="ml-5 text-sm text-black dark:text-white">Month:</p>
+                                    <p className="text-sm text-black dark:text-white">{month}</p>
                                 </div>
                                 <div className="mt-3 flex justify-between">
-                                    <p className="ml-5 text-sm text-black dark:text-white"> Clock in image:</p>
-                                    {/* <img src={decodeBase64Image(clockInPicture)} alt="Attendance" className="w-12 h-12 object-cover rounded-full" /> */}
+                                    <p className="ml-5 text-sm text-black dark:text-white">Year:</p>
+                                    <p className="text-sm text-black dark:text-white">{year}</p>
+                                </div>
+                                <div className="mt-3 flex justify-between">
+                                    <p className="ml-5 text-sm text-black dark:text-white"> Salary:</p>
+                                    <p className="text-sm text-black dark:text-white">{amount}</p>
+                                </div>
+                                <div className="mt-3 flex justify-between">
+                                    <p className="ml-5 text-sm text-black dark:text-white"> Bonus:</p>
+                                    <p className="text-sm text-black dark:text-white">{bonus}</p>
+                                </div>
+                                <div className="mt-3 flex justify-between">
+                                    <p className="ml-5 text-sm text-black dark:text-white"> Tax:</p>
+                                    <p className="text-sm text-black dark:text-white">{tax}</p>
+                                </div>
+                                <div className="mt-3 flex justify-between">
+                                    <p className="ml-5 text-sm text-black dark:text-white"> Total Paid:</p>
+                                    <p className="text-sm text-black dark:text-white">{totalPaid}</p>
+                                </div>
+                                <div className="mb-5">
+                                    <label className="mb-2 block text-black dark:text-white">Upload Contract PDF</label>
+                                    <input
+                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                        type="file"
+                                        onChange={handlePdfFileChange}
+                                    />
                                 </div>
                             </div>
-
                         </div>
                         <div className="flex gap-6 items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b bg-black">
-                            <PrimaryButton onClick={handleClose}>Pay </PrimaryButton>
+                            <PrimaryButton onClick={handlePayNow}> Pay now</PrimaryButton>
                             <DangerButton onClick={handleClose}>Cancel</DangerButton>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
         </>
     );

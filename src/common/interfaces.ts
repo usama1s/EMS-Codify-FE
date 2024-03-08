@@ -22,7 +22,7 @@ export interface ManagerInterface {
     roles: number[];
     designation: string;
     date_of_joining: string;
-    isEmployee:boolean
+    isEmployee: boolean
 }
 
 export interface EmployeeInterface {
@@ -159,6 +159,18 @@ export interface DashboardModalProps {
     clockout: string;
     clockInPicture: any,
     clockOutPicture: any,
+}
+
+export interface PayModalProps {
+    onClose: () => void;
+    fullName:string
+    userId: number
+    month: string;
+    year: number;
+    amount: number;
+    bonus: number;
+    tax: Float32Array;
+    totalPaid: number;
 }
 
 export interface AllEmployeeAttendanceModalProps {
@@ -304,6 +316,22 @@ export interface ContractsInterface {
     contractEndDate: string;
     pay: number;
     pdf: string;
+    contractStatus: number;
+}
+
+export interface PayScheduleInterface {
+    map(arg0: (contract: any, index: any) => import("react/jsx-runtime").JSX.Element): import("react").ReactNode;
+    totalPaid: number;
+    fullName: string;
+    contractId: any;
+    userId: number;
+    reportingManager: number;
+    contractStartDate: string;
+    contractEndDate: string;
+    pay: number;
+    tax: any;
+    month: string;
+    year: number;
     contractStatus: number;
 }
 

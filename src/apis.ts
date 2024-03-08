@@ -22,6 +22,7 @@ export const APIS = {
     getAllAllottedAsset: `${BaseURL}manager/get-all-alloted-assets`,
     createContact: `${BaseURL}manager/create-employee-contract`,
     changeContactStatus: `${BaseURL}manager/change-contract-status`,
+    paySalary: `${BaseURL}manager/pay-salary`,
     // ATTENDANCE
     markAttendance: `${BaseURL}attendence/insert-attendence`,
     getClockInTime: `${BaseURL}attendence/get-clock-in-time/:user_id`,
