@@ -46,7 +46,7 @@ const PayScheduleTable = () => {
     }
 
     const openAdvancePayModal = () => {
-        setShowPayModal(false)
+        
     }
 
     const openPayModal = (index: any) => {
